@@ -1,0 +1,87 @@
+{
+  "eval_session": "model-factory-skills v0.2 技能触发与执行质量评估",
+  "date": "2026-06-17",
+  "methodology": "with-skill：subagent 读取 SKILL.md（+按需 references）后执行真实用户 prompt，产出对照 assertions 评审。覆盖闭环不同环节，含'有深度层'与'无深度层'对照。",
+  "skills": [
+    {
+      "skill": "ml-inference-optimize",
+      "has_references": true,
+      "evals": [
+        {
+          "id": "infer-E1",
+          "name": "ide-completion-latency",
+          "prompt": "我们微调了个 7B 代码模型挂在 vLLM 上给 IDE 做补全，P95 延速到 900ms，开发者反馈卡顿明显。补全场景对延迟特别敏感，帮我系统梳理怎么把延迟压下去，并且别把代码能力搞没了。",
+          "expected_output": "系统优化方案：识别补全/IDE 延迟敏感性，给出量化/引擎/batching/prefix caching/speculative 等手段，强调对照评测防精度掉，引用 references 深度内容。",
+          "assertions": [
+            "指出补全/IDE 场景对延迟的特殊敏感性（区别于一般 API）",
+            "给出至少 3 种具体优化手段（量化/continuous batching/prefix caching/speculative/引擎选型 之一）",
+            "强调优化必须对照评测、防止代码能力精度下降",
+            "引用或使用 references/（quantization/engines/cost-model）的深度内容，而非泛泛而谈"
+          ]
+        },
+        {
+          "id": "infer-E2",
+          "name": "inference-cost-feasibility",
+          "prompt": "老板让我评估这个模型上线划不划算，推理成本怎么看，多少算贵，给我们一个判断方法。",
+          "expected_output": "推理成本核算方法：单 token 成本公式/实测吞吐，毛利保护线（成本 vs 定价），多少算贵的判断标准。",
+          "assertions": [
+            "给出单 token 成本的核算方法（公式或吞吐反推）",
+            "提到毛利保护（推理成本相对商业定价的比例，如 40% 线）",
+            "强调用实测吞吐而非厂商理论值",
+            "引用 references/cost-model 的内容"
+          ]
+        }
+      ]
+    },
+    {
+      "skill": "eval-benchmark-build",
+      "has_references": true,
+      "evals": [
+        {
+          "id": "eval-E1",
+          "name": "code-model-eval-design",
+          "prompt": "我们做了个代码模型，想认真评测一下到底行不行，别只跑个 HumanEval 自欺欺人。帮我们设计一套代码模型评测方案。",
+          "expected_output": "代码评测方案：指出 HumanEval 易污染，推荐防污染（LiveCodeBench 时间分窗/私有集），执行式 pass@k，覆盖多语言/Agent/补全维度，引用 capability-benchmarks。",
+          "assertions": [
+            "指出 HumanEval 易被污染的问题",
+            "推荐防污染手段（LiveCodeBench 时间分窗 / 私有评测集 / 训练集剔除）",
+            "采用执行式评测（pass@k）而非主观打分",
+            "覆盖代码场景多维度（多语言/Agent 如 SWE-bench/补全 FIM）",
+            "引用 references/capability-benchmarks 的真实 benchmark"
+          ]
+        },
+        {
+          "id": "eval-E2",
+          "name": "llm-judge-pitfalls",
+          "prompt": "团队想用 GPT-4o 当裁判给我们的模型输出打分，规模化又便宜。靠谱吗？有什么坑要注意？",
+          "expected_output": "LLM judge 评估：列出偏见（position/verbosity/self-enhancement），强调一致性与人工校准，指出有客观指标时优先客观指标，引用 llm-as-judge。",
+          "assertions": [
+            "指出至少 2 种 LLM judge 偏见（position/verbosity/self-enhancement）",
+            "强调一致性测试和与人工的校准（agreement）",
+            "指出有客观指标的任务应优先用客观指标，而非 LLM judge",
+            "引用 references/llm-as-judge 的内容"
+          ]
+        }
+      ]
+    },
+    {
+      "skill": "model-product-prd",
+      "has_references": false,
+      "note": "无深度层对照组：检验纯框架技能是否足够",
+      "evals": [
+        {
+          "id": "prd-E1",
+          "name": "code-completion-prd",
+          "prompt": "我们要给开发者做一个代码补全 API，帮我写个 PRD。",
+          "expected_output": "模型能力 PRD：有可评测成功标准、声明能力边界/失败模式、定义 MVP 范围、触发数据/评测质疑。",
+          "assertions": [
+            "包含可评测的成功标准（具体数字目标，非'效果更好'）",
+            "声明能力边界或已知失败模式",
+            "定义 MVP 范围（明确做什么/不做什么）",
+            "触发数据可得性/评测可量化的质疑（@data-strategy/@evaluation）"
+          ]
+        }
+      ]
+    }
+  ]
+}

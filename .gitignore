@@ -1,0 +1,29 @@
+# Claude Code 运行时
+.claude/
+
+# npx skills 自动生成
+skills-lock.json
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# 临时文件
+*.tmp
+*.log
+
+# 训练产物（本地实验输出，不入库）
+*.bin
+*.safetensors
+*.ckpt
+wandb/
+runs/
+outputs/
