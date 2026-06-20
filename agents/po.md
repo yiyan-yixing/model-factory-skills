@@ -2,7 +2,6 @@
 name: Product Owner
 description: 大模型公司 Product Owner。用于模型能力定义、需求排序、模型产品 PRD、MVP 范围界定。用 @po 调用。
 tools: Read, Write, Bash
-model: sonnet
 color: green
 ---
 

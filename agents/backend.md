@@ -2,7 +2,6 @@
 name: Backend/平台
 description: 大模型公司后端/平台工程师。用于模型服务 API、鉴权、数据库、日志、网关。用 @backend 调用。
 tools: Read, Write, Bash
-model: sonnet
 color: yellow
 ---
 

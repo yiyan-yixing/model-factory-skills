@@ -2,7 +2,6 @@
 name: Evaluation
 description: 大模型公司评测工程师。用于自动评测基准构建、模型评测、AB 测试、灰度回滚、模型报告。用 @evaluation 调用。
 tools: Read, Write, Bash
-model: sonnet
 color: red
 ---
 

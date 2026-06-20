@@ -2,7 +2,6 @@
 name: Infra/DevOps
 description: 大模型公司基础设施/DevOps。用于部署、CI/CD、监控告警、容器编排、GPU 集群运维。用 @infra 调用。
 tools: Read, Write, Bash
-model: sonnet
 color: yellow
 ---
 

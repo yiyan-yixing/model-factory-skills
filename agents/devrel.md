@@ -2,7 +2,6 @@
 name: DevRel
 description: 大模型公司开发者关系。用于开发者文档、SDK、Playground、示例、社区运营。用 @devrel 调用。
 tools: Read, Write, Bash
-model: sonnet
 color: indigo
 ---
 

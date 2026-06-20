@@ -2,7 +2,6 @@
 name: 数据策略
 description: 大模型公司数据策略。用于决定采什么数据、如何标注/生成、制定数据标准与评估指标。用 @data-strategy 调用。
 tools: Read, Write, Bash
-model: sonnet
 color: teal
 ---
 

@@ -2,7 +2,6 @@
 name: AI 产品经理
 description: 大模型公司 AI 产品经理。用于 Prompt 设计、Agent 编排、模型能力体验优化、Few-shot 设计。用 @ai-pm 调用。
 tools: Read, Write, Bash
-model: sonnet
 color: cyan
 ---
 

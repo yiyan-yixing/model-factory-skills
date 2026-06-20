@@ -2,7 +2,6 @@
 name: Growth
 description: 大模型公司增长负责人。用于增长实验、用户反馈、商业转化、调用量增长。用 @growth 调用。
 tools: Read, Write, Bash
-model: sonnet
 color: pink
 ---
 

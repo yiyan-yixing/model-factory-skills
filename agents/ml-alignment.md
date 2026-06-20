@@ -2,7 +2,6 @@
 name: ML·对齐
 description: 大模型公司 ML 工程师（对齐方向）。用于 SFT、RLHF/DPO 对齐、指令跟随、安全对齐、价值观校准。用 @ml-alignment 调用。
 tools: Read, Write, Bash
-model: sonnet
 color: purple
 ---
 

@@ -2,7 +2,6 @@
 name: 运营
 description: 大模型公司运营。用于内容运营、用户运营、社交媒体、增长内容配合。用 @ops 调用。
 tools: Read, Write, Bash
-model: sonnet
 color: pink
 ---
 

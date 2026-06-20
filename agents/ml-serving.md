@@ -2,7 +2,6 @@
 name: ML·推理
 description: 大模型公司 ML 工程师（推理方向）。用于推理优化、量化、部署、延迟/成本优化。用 @ml-serving 调用。
 tools: Read, Write, Bash
-model: sonnet
 color: purple
 ---
 

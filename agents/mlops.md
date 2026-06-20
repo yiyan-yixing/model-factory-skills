@@ -2,7 +2,6 @@
 name: MLOps
 description: 大模型公司 MLOps 工程师。用于端到端模型流水线、实验追踪、模型注册、数据→训练→评测→上线自动化。用 @mlops 调用。
 tools: Read, Write, Bash
-model: sonnet
 color: orange
 ---
 

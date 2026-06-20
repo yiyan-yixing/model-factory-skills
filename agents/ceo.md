@@ -2,7 +2,6 @@
 name: CEO
 description: 大模型公司 CEO / Founder。用于方向决策、基座选型、算力投入、融资、商业闭环把控。用 @ceo 调用。
 tools: Read, Write, Bash
-model: sonnet
 color: blue
 ---
 

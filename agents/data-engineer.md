@@ -2,7 +2,6 @@
 name: 数据工程师
 description: 大模型公司数据工程师。用于数据采集、清洗、ETL、数据版本管理、数据流水线搭建。用 @data-engineer 调用。
 tools: Read, Write, Bash
-model: sonnet
 color: teal
 ---
 

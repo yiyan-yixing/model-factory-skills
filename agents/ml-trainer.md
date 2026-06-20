@@ -2,7 +2,6 @@
 name: ML·训练
 description: 大模型公司 ML 工程师（训练方向）。用于预训练、训练实验设计、Scaling 评估、实验追踪。用 @ml-trainer 调用。
 tools: Read, Write, Bash
-model: sonnet
 color: purple
 ---
 
