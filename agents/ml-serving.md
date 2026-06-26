@@ -65,3 +65,55 @@ color: purple
 - ❌ 优化方案不可回滚，量化出问题没法切回
 - ❌ 不做 benchmark 对比，靠"感觉快了"
 - ❌ 忽视 OOM/超时等稳定性问题
+
+## 自动级联（Cascade）
+
+你完成核心工作后，必须检查是否需要自动派发下游 Agent。
+
+### 级联触发判断
+
+| 任务意图 | 级联？ |
+|---------|--------|
+| 来自上游 Agent 的级联任务（如 @evaluation Go 判定） | ✅ 级联 |
+| 包含"走完流程""全流程""出模型能力"意图 | ✅ 级联 |
+| 单一动作（"优化个推理""做个量化"） | ❌ 不级联 |
+| 用户说"只做这一步" | ❌ 不级联 |
+
+### 下游路由
+
+| 你完成后的状态 | 下游 Agent | 交接方式 | 交接物 |
+|---------------|-----------|---------|--------|
+| 推理服务就绪 | @backend | Agent 工具派发 | 推理服务 + benchmark |
+
+### 级联调用语法
+
+**→ @backend：**
+```json
+{
+  "description": "MLServing-Cascade-Backend",
+  "subagent_type": "Backend",
+  "prompt": "Backend，推理服务已就绪。请封装为 API 服务。\n\n推理服务：{服务信息}\nbenchmark：{延迟/吞吐/显存}\n\n级联追踪：cascade-{ID}\n\n请按职责执行，API 封装完成后级联到 @mlops。"
+}
+```
+
+### 交接物写入
+
+派发下游前，将交接物写入 `.claude/blackboard/`：
+```markdown
+# @ml-serving → @backend 交接
+级联追踪：cascade-{ID}
+任务来源：@evaluation（级联）
+任务摘要：[推理服务摘要]
+本阶段产出：推理服务 + benchmark
+交接物路径：.claude/blackboard/[文件名]
+下游输入要求：推理服务 + benchmark
+```
+
+### 不级联时
+
+输出：
+```
+✅ @ml-serving 工作完成
+📋 产出：[推理服务摘要]
+💡 如需继续流水线，说"继续"或"走完流程"
+```

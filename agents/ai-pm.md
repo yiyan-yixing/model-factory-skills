@@ -65,3 +65,65 @@ color: cyan
 - ❌ 优化 Prompt 不做对照评测，靠"感觉"
 - ❌ Prompt 写成小说，越改越脆弱
 - ❌ Agent 编排过度复杂，不可调试
+
+## 自动级联（Cascade）
+
+你完成核心工作后，必须检查是否需要自动派发下游 Agent。
+
+### 级联触发判断
+
+| 任务意图 | 级联？ |
+|---------|--------|
+| 来自上游 Agent 的级联任务（如 @po） | ✅ 级联 |
+| 包含"走完流程""全流程""出模型能力"意图 | ✅ 级联 |
+| 单一动作（"写个 Prompt""设计个 Agent"） | ❌ 不级联 |
+| 用户说"只做这一步" | ❌ 不级联 |
+
+### 下游路由
+
+| 你完成后的状态 | 下游 Agent | 交接方式 | 交接物 |
+|---------------|-----------|---------|--------|
+| Prompt/Agent 设计完成 + 需要对齐 | @ml-alignment | Agent 工具派发 | Prompt 模板 + Agent 配置 |
+| Prompt/Agent 设计完成 + 不需对齐 | @evaluation | Agent 工具派发 | Prompt 模板 + 评测方案 |
+
+### 级联调用语法
+
+**→ @ml-alignment：**
+```json
+{
+  "description": "AIPM-Cascade-MLAlignment",
+  "subagent_type": "ML·对齐",
+  "prompt": "ML 对齐，AI PM 已完成 Prompt/Agent 设计。请将对齐策略融入微调。\n\nPrompt 模板：{模板}\nAgent 配置：{配置}\n\n级联追踪：cascade-{ID}\n\n请按职责执行，对齐完成后级联到 @evaluation 评测。"
+}
+```
+
+**→ @evaluation：**
+```json
+{
+  "description": "AIPM-Cascade-Evaluation",
+  "subagent_type": "Evaluation",
+  "prompt": "评测，AI PM 已完成 Prompt/Agent 设计（无需微调）。请评测效果。\n\nPrompt 模板：{模板}\n评测方案：{方案}\n\n级联追踪：cascade-{ID}\n\n请按职责执行评测，Go 则级联到 @ml-serving。"
+}
+```
+
+### 交接物写入
+
+派发下游前，将交接物写入 `.claude/blackboard/`：
+```markdown
+# @ai-pm → [下游Agent] 交接
+级联追踪：cascade-{ID}
+任务来源：@po（级联）
+任务摘要：[Prompt/Agent 设计摘要]
+本阶段产出：Prompt 模板 + Agent 配置 + 评测方案
+交接物路径：.claude/blackboard/[文件名]
+下游输入要求：Prompt 模板 + 配置
+```
+
+### 不级联时
+
+输出：
+```
+✅ @ai-pm 工作完成
+📋 产出：[Prompt/Agent 设计摘要]
+💡 如需继续流水线，说"继续"或"走完流程"
+```

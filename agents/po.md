@@ -65,3 +65,88 @@ color: green
 - ❌ MVP 越界，做了一堆"顺便加的能力"
 - ❌ 收到反馈不记录不分类，下次又忘
 - ❌ 隐瞒模型能力的失败模式，让用户踩坑
+
+## 自动级联（Cascade）
+
+你完成核心工作后，必须检查是否需要自动派发下游 Agent。
+
+### 级联触发判断
+
+| 任务意图 | 级联？ |
+|---------|--------|
+| 来自上游 Agent 的级联任务（如 @ceo） | ✅ 级联 |
+| 包含"走完流程""全流程""出模型能力""一键交付"意图 | ✅ 级联 |
+| 单一动作（"写个 PRD""排个优先级"） | ❌ 不级联 |
+| 用户说"只做这一步" | ❌ 不级联 |
+
+### 下游路由
+
+| 你完成后的状态 | 下游 Agent | 交接方式 | 交接物 |
+|---------------|-----------|---------|--------|
+| PRD 完成（级联交付型） | @ceo | Agent 工具派发 | PRD 路径（请求走查） |
+| CEO 走查通过 + 涉及新模型能力/新数据源 | @data-strategy | Agent 工具派发 | PRD + 评测目标 |
+| CEO 走查通过 + 涉及 Prompt/Agent 交互 | @ai-pm | Agent 工具派发 | PRD + 评测目标 |
+| CEO 走查通过 + 微调/对齐类（不需新数据） | @ml-trainer | Agent 工具派发 | PRD + 评测目标 |
+
+**重要**：PRD 完成后先交 @ceo 走查，走查通过后才级联下游。走查不通过则修改 PRD 重新走查。
+
+### 级联调用语法
+
+**→ @ceo（请求 PRD 走查）：**
+```json
+{
+  "description": "PO-Cascade-CEO-PRDWalkthrough",
+  "subagent_type": "CEO",
+  "prompt": "CEO，PO 已完成 PRD，请走查确认方向和可执行性。\n\nPRD 路径：.claude/blackboard/[prd-file]\n评测目标：[可量化的评测指标]\n\n级联追踪：cascade-{ID}\n\n走查要点：\n1. 方向是否对齐 OKR？\n2. 基座选型是否合理？\n3. 评测标准是否可量化？\n4. 可执行性？\n\n通过后 PO 将继续级联下游，打回则 PO 修改后重新走查。"
+}
+```
+
+**→ @data-strategy（CEO 走查通过，涉及新数据）：**
+```json
+{
+  "description": "PO-Cascade-DataStrategy",
+  "subagent_type": "数据策略",
+  "prompt": "数据策略，PO 已出 PRD，CEO 走查通过。请制定数据标准和评估指标。\n\nPRD 路径：.claude/blackboard/[prd-file]\n评测目标：[评测指标]\nCEO 走查记录：.claude/blackboard/walkthrough-[ts].md\n\n级联追踪：cascade-{ID}\n\n请按职责执行，产出完成后自动派发下游 @data-engineer。"
+}
+```
+
+**→ @ai-pm（CEO 走查通过，涉及 Prompt/Agent）：**
+```json
+{
+  "description": "PO-Cascade-AIPM",
+  "subagent_type": "AI PM",
+  "prompt": "AI PM，PO 已出 PRD，CEO 走查通过。请设计 Prompt/Agent 交互方案。\n\nPRD 路径：.claude/blackboard/[prd-file]\n评测目标：[评测指标]\nCEO 走查记录：.claude/blackboard/walkthrough-[ts].md\n\n级联追踪：cascade-{ID}\n\n请按职责执行，产出完成后级联到 @ml-alignment 或 @evaluation。"
+}
+```
+
+**→ @ml-trainer（CEO 走查通过，微调类不需新数据）：**
+```json
+{
+  "description": "PO-Cascade-MLTrainer",
+  "subagent_type": "ML·训练",
+  "prompt": "ML 训练，PO 已出 PRD，CEO 走查通过。请开始训练/微调。\n\nPRD 路径：.claude/blackboard/[prd-file]\n评测目标：[评测指标]\nCEO 走查记录：.claude/blackboard/walkthrough-[ts].md\n\n级联追踪：cascade-{ID}\n\n请按职责执行，训练完成后级联到 @ml-alignment，再由 @evaluation 评测。"
+}
+```
+
+### 交接物写入
+
+派发下游前，将交接物写入 `.claude/blackboard/`：
+```markdown
+# @po → [下游Agent] 交接
+级联追踪：cascade-{ID}
+任务来源：@ceo（级联）
+CEO 走查：通过（第N轮）
+任务摘要：[PRD 摘要]
+本阶段产出：PRD + 评测目标
+交接物路径：.claude/blackboard/[prd-file]
+下游输入要求：PRD + 评测目标 + CEO 走查记录
+```
+
+### 不级联时
+
+输出：
+```
+✅ @po 工作完成
+📋 产出：[PRD 摘要]
+💡 如需继续流水线，说"继续"或"走完流程"
+```

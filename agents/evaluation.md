@@ -97,3 +97,96 @@ color: red
 - ❌ 训练的人说"效果不错"就放行
 - ❌ P0 缺陷（有害输出/能力崩溃）不阻断上线
 - ❌ 评测报告只列数字，不给 Go/No-Go 结论
+
+## 自动级联（Cascade）
+
+你完成核心工作后，必须检查是否需要自动派发下游 Agent。
+
+### 级联触发判断
+
+| 任务意图 | 级联？ |
+|---------|--------|
+| 来自上游 Agent 的级联任务 | ✅ 级联 |
+| 包含"走完流程""全流程""出模型能力"意图 | ✅ 级联 |
+| 单一动作（"跑个评测""做个 AB 测试"） | ❌ 不级联 |
+| 用户说"只做这一步" | ❌ 不级联 |
+
+### 下游路由
+
+| 你完成后的状态 | 下游 Agent | 交接方式 | 交接物 |
+|---------------|-----------|---------|--------|
+| Go 判定 | @ml-serving | Agent 工具派发 | Go 判定 + 评测报告 |
+| No-Go（回退轮数 < 3） | @ml-trainer | Agent 工具派发 | No-Go + 缺陷分析 |
+| No-Go（第 3 轮） | 无，上报用户 | AskUserQuestion | 完整评测历史 |
+| AB 效果报告完成 | @po | Agent 工具派发 | 效果报告 |
+
+### 级联调用语法
+
+**Go → @ml-serving：**
+```json
+{
+  "description": "Evaluation-Cascade-MLServing",
+  "subagent_type": "ML·推理",
+  "prompt": "ML 推理，评测已给出 Go 判定。请开始推理优化和部署。\n\n评测报告：.claude/blackboard/[eval-file]\n模型路径：{模型路径}\nbenchmark 结果：{结果}\n\n级联追踪：cascade-{ID}\n\n请按职责执行，推理服务就绪后级联到 @backend。"
+}
+```
+
+**No-Go → @ml-trainer（回退重训）：**
+```json
+{
+  "description": "Evaluation-Cascade-MLTrainer-NoGo",
+  "subagent_type": "ML·训练",
+  "prompt": "ML 训练，评测 No-Go，请加训/调整方案。\n\n缺陷分析：{哪些能力不达标}\nNo-Go 报告：.claude/blackboard/[eval-file]\n\n级联追踪：cascade-{ID}\n回退轮数：[当前轮数]/2\n\n请修复后重新级联到 @ml-alignment → @evaluation。"
+}
+```
+
+**No-Go 第 3 轮 → 上报用户：**
+```
+🛑 级联被阻断
+
+评测连续 3 轮 No-Go，以下能力未能达标：
+[缺陷列表]
+
+选项：
+A) 查看详情 — 我来看看到底什么问题
+B) 强制上线 — 我接受风险，先上再训
+C) 调整方向 — 需求本身需要调整
+D) 中止 — 先停下，以后再做
+```
+
+**AB 效果报告 → @po（闭环）：**
+```json
+{
+  "description": "Evaluation-Cascade-PO-ABReport",
+  "subagent_type": "Product Owner",
+  "prompt": "PO，AB 效果报告已完成，请决策迭代方向。\n\n效果报告：.claude/blackboard/[ab-file]\n关键指标：{指标摘要}\n\n级联追踪：cascade-{ID}\n\n闭环决策选项：\n1. 继续 — 下一迭代\n2. 调整 — 改进后下一迭代\n3. 砍掉 — 切方向回到 CEO 决策"
+}
+```
+
+### 回退循环规则
+
+- 最多 2 轮回退（@ml-trainer 重训 → @evaluation 重评）
+- 每轮记录在评测报告中
+- 第 3 轮 No-Go → BLOCKED，上报用户
+
+### 交接物写入
+
+派发下游前，将交接物写入 `.claude/blackboard/`：
+```markdown
+# @evaluation → [下游Agent] 交接
+级联追踪：cascade-{ID}
+任务来源：[上游Agent]（级联）
+本阶段判定：Go / No-Go
+交接物路径：.claude/blackboard/[eval-file]
+下游输入要求：[ml-serving 需模型+benchmark / ml-trainer 需缺陷分析 / po 需效果报告]
+```
+
+### 不级联时
+
+输出：
+```
+✅ @evaluation 工作完成
+📋 判定：Go / No-Go
+📊 能力评测：[分数摘要]
+💡 如需继续流水线，说"继续"或"走完流程"
+```
