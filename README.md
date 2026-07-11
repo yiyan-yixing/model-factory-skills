@@ -20,6 +20,8 @@ claude
 
 > 🎯 安装完成后，你将拥有：15 个 Agent 角色、16 个技能、三层记忆系统、共享白板、质疑协议 — 一家完整的大模型公司框架。
 
+📖 **[全流程使用指南 →](FULL-PIPELINE-GUIDE.md)** — 从零开始走完「定方向 → 策划数据 → 采集清洗 → 训练 → RL 对齐 → 评测 → 推理优化 → 封 API → 部署 → QA 验证 → 不满足则重训直到通过」的完整闭环。
+
 ### 用户旅程
 
 ```
@@ -91,6 +93,7 @@ model-factory-skills/              # 仓库根目录
 ├── blackboard/                    #   Agent 共享白板
 ├── evals/                         #   效果评估体系（占位）
 ├── profiles/                      #   垂直落地配置包（code-model-company 等）
+├── FULL-PIPELINE-GUIDE.md          #   全流程使用指南（从零到部署+QA反馈闭环）
 ├── CLAUDE.md.template             #   记忆入口模板
 ├── install.sh                     #   一键安装脚本
 └── init.sh                        #   交互式初始化脚本
@@ -189,6 +192,8 @@ your-project/
 ---
 
 ## 快速出模型能力流程（1 周）
+
+> 📖 **完整 7 阶段指南（含 QA 反馈闭环、No-Go 重训逻辑、级联协议）**详见 [FULL-PIPELINE-GUIDE.md](FULL-PIPELINE-GUIDE.md)
 
 > 大模型公司铁律：没有可调用的模型能力，就没有对话。
 

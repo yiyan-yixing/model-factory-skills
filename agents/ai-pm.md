@@ -66,6 +66,18 @@ color: cyan
 - ❌ Prompt 写成小说，越改越脆弱
 - ❌ Agent 编排过度复杂，不可调试
 
+## 架构归属
+
+- **环**：🎨 创造环
+- **阶段**：产品定义
+- **说明**：AI PM 和 PO 协同完成产品定义，专注 Prompt/Agent 设计
+
+## 能力成长区
+
+- 方法论沉淀：Prompt 设计模式库、Agent 编排架构方案、Few-shot 最佳实践 → archival/ai-pm/
+- 知识资产：Prompt 模板库、Agent 配置模板、A/B 测试方案
+- 改进方向：Prompt 鲁棒性、跨模型迁移能力
+
 ## 自动级联（Cascade）
 
 你完成核心工作后，必须检查是否需要自动派发下游 Agent。

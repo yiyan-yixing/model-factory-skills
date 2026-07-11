@@ -1,0 +1,55 @@
+{
+  "version": "1.0",
+  "coarse_intents": [
+    "chat",
+    "search",
+    "generation",
+    "code",
+    "math",
+    "tool"
+  ],
+  "sub_intents": {
+    "chat": [
+      "emotion",
+      "greeting",
+      "persona",
+      "small_talk"
+    ],
+    "search": [
+      "comparison",
+      "factual",
+      "how_to",
+      "opinion"
+    ],
+    "generation": [
+      "audio_gen",
+      "image_gen",
+      "text_gen",
+      "video_gen"
+    ],
+    "code": [
+      "debug",
+      "explain",
+      "refactor",
+      "write"
+    ],
+    "math": [
+      "computation",
+      "equation",
+      "proof",
+      "statistics"
+    ],
+    "tool": [
+      "calendar",
+      "email",
+      "file_op",
+      "system",
+      "translate"
+    ]
+  },
+  "output_format": {
+    "intent": "coarse intent (string)",
+    "sub_intent": "fine-grained intent (string)",
+    "rewritten_query": "expanded and clarified query (string)"
+  }
+}

@@ -27,3 +27,9 @@ Thumbs.db
 wandb/
 runs/
 outputs/
+
+# 基座模型（从 HuggingFace 下载，不入库；用 merge_lora.py 生成 merged/ 的配置文件入库）
+models/Qwen2.5-*/
+
+# 合并后模型权重（只有配置/tokenizer 入库，权重文件由 .safetensors 规则排除）
+# models/intent-0.5b-v1/merged/ 的 config.json、tokenizer 等会入库

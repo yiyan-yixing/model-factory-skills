@@ -1,0 +1,812 @@
+[
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "圆周率前10位",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"computation\", \"rewritten_query\": \"请提供圆周率π的前10位小数\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能帮我特斯拉和比亚迪怎么选嘛",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"comparison\", \"rewritten_query\": \"请对比特斯拉和比亚迪新能源汽车的性能和性价比\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "有点沮丧",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"emotion\", \"rewritten_query\": \"我感到沮丧，想聊聊调整心态的方法\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "翻译一下这段话",
+    "output": "{\"intent\": \"tool\", \"sub_intent\": \"translate\", \"rewritten_query\": \"请将这段文字翻译成英文，保持原文语义和语气\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能特斯拉和比亚迪怎么选",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"comparison\", \"rewritten_query\": \"请对比特斯拉和比亚迪新能源汽车的性能和性价比\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "请问你有什么爱好可以吗",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"small_talk\", \"rewritten_query\": \"我想闲聊，了解你的兴趣爱好\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "怎么烤蛋糕吧",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"how_to\", \"rewritten_query\": \"请提供烤蛋糕的详细食谱和烘焙步骤\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "帮我求方差吧",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"statistics\", \"rewritten_query\": \"请计算这组数据的方差，展示计算过程\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能帮我这个分布是正态的吗嘛",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"statistics\", \"rewritten_query\": \"请分析这组数据是否符合正态分布，提供检验方法\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "这个英文什么意思",
+    "output": "{\"intent\": \"tool\", \"sub_intent\": \"translate\", \"rewritten_query\": \"请将这段英文翻译成中文，准确传达原文含义\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "配个BGM一下",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"video_gen\", \"rewritten_query\": \"请为这段视频配上适合的背景音乐\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "麻烦我好开心啊",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"emotion\", \"rewritten_query\": \"我心情很好，想分享我的喜悦\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "如何减肥呢",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"how_to\", \"rewritten_query\": \"请提供科学有效的减肥方法和饮食运动建议\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能提醒我下午3点开会呢",
+    "output": "{\"intent\": \"tool\", \"sub_intent\": \"calendar\", \"rewritten_query\": \"请设置今天下午3:00的会议提醒\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能帮我早上好",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"greeting\", \"rewritten_query\": \"早上好，我想和你打个招呼\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "请问解3x+7=22",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"equation\", \"rewritten_query\": \"请求解一元一次方程3x+7=22中x的值\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能解方程组x+y=5, x-y=1呢",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"equation\", \"rewritten_query\": \"请求解二元一次方程组x+y=5, x-y=1的解\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "帮我17乘以23吧",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"computation\", \"rewritten_query\": \"请计算17乘以23的结果\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能圆周率前10位",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"computation\", \"rewritten_query\": \"请提供圆周率π的前10位小数\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "麻烦React和Vue哪个好",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"comparison\", \"rewritten_query\": \"请对比React和Vue前端框架的特点和适用场景\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "算积分∫x²dx",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"equation\", \"rewritten_query\": \"请计算不定积分∫x²dx的结果\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能生成一封邮件呢",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"text_gen\", \"rewritten_query\": \"请撰写一封商务邀请邮件，语气正式，包含会议时间和议程\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "请问有点沮丧",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"emotion\", \"rewritten_query\": \"我感到沮丧，想聊聊调整心态的方法\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能帮我这个函数返回值不对",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"debug\", \"rewritten_query\": \"请检查这个函数的逻辑错误，修复返回值不正确的问题\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "帮我P一下这张图可以吗",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"image_gen\", \"rewritten_query\": \"请对这张图片进行编辑处理，优化画质和色彩\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "怎么学英语",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"how_to\", \"rewritten_query\": \"请提供系统性的英语学习方法和学习路线建议\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "请问Python是谁发明的",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"factual\", \"rewritten_query\": \"请告诉我Python编程语言的创始人是谁\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "写个二叉树遍历嘛",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"write\", \"rewritten_query\": \"请用Python实现二叉树的前序、中序和后序遍历算法\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "帮我解释一下Promise",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"explain\", \"rewritten_query\": \"请详细解释JavaScript中Promise的概念、状态和使用方法\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "根号2约等于多少吧",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"computation\", \"rewritten_query\": \"请计算根号2的近似值，保留到小数点后6位\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能Docker怎么用",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"explain\", \"rewritten_query\": \"请详细解释Docker容器技术的核心概念和基本使用方法\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "你是GPT吗嘛",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"persona\", \"rewritten_query\": \"我想确认你是什么类型的AI模型\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "打开设置啊",
+    "output": "{\"intent\": \"tool\", \"sub_intent\": \"system\", \"rewritten_query\": \"请打开系统设置应用\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能帮我证明素数有无穷多个",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"proof\", \"rewritten_query\": \"请用反证法证明素数有无穷多个\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "特斯拉和比亚迪怎么选吧",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"comparison\", \"rewritten_query\": \"请对比特斯拉和比亚迪新能源汽车的性能和性价比\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能帮我截个屏嘛",
+    "output": "{\"intent\": \"tool\", \"sub_intent\": \"system\", \"rewritten_query\": \"请对当前屏幕进行截图操作\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能中翻英",
+    "output": "{\"intent\": \"tool\", \"sub_intent\": \"translate\", \"rewritten_query\": \"请将这段中文内容翻译成英文\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "实现一个LRU缓存一下",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"write\", \"rewritten_query\": \"请用Python实现LRU缓存数据结构，支持get和put操作\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能帮我你好",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"greeting\", \"rewritten_query\": \"你好，我想和你打个招呼\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "写个二叉树遍历",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"write\", \"rewritten_query\": \"请用Python实现二叉树的前序、中序和后序遍历算法\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "生成一段背景音乐可以吗",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"audio_gen\", \"rewritten_query\": \"请生成一段轻柔的背景音乐，钢琴为主，3分钟时长\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能hello",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"greeting\", \"rewritten_query\": \"你好，我想和你打个招呼\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "写个API接口一下",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"write\", \"rewritten_query\": \"请用Flask框架编写RESTful API接口，包含增删改查功能\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "做个Vlog片头",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"video_gen\", \"rewritten_query\": \"请制作一段Vlog视频片头动画，时尚简约风格，5秒\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "远程办公好不好",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"opinion\", \"rewritten_query\": \"请分析远程办公的利弊和适用条件\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "麻烦代码太乱了帮我整理一下",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"refactor\", \"rewritten_query\": \"请重构代码，改善命名规范、添加注释、优化代码结构\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "求标准差啊",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"statistics\", \"rewritten_query\": \"请计算这组数据的标准差，展示计算过程\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "麻烦你用的是哪个版本",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"persona\", \"rewritten_query\": \"我想了解你当前的模型版本信息\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "写个段子啊",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"text_gen\", \"rewritten_query\": \"请创作一个幽默搞笑的段子，适合社交媒体分享\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "剪辑一下视频一下",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"video_gen\", \"rewritten_query\": \"请帮我剪辑视频，裁剪精华片段并添加转场效果\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "帮我二战什么时候结束的",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"factual\", \"rewritten_query\": \"请告诉我第二次世界大战结束的具体年份\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "麻烦你叫什么名字",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"persona\", \"rewritten_query\": \"我想了解你的名称和身份信息\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "帮我P一下这张图",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"image_gen\", \"rewritten_query\": \"请对这张图片进行编辑处理，优化画质和色彩\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "请问今天天气怎么样可以吗",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"small_talk\", \"rewritten_query\": \"我想聊聊天，今天天气怎么样\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "我想英翻中",
+    "output": "{\"intent\": \"tool\", \"sub_intent\": \"translate\", \"rewritten_query\": \"请将这段英文内容翻译成中文\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能帮我123乘以456等于多少嘛",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"computation\", \"rewritten_query\": \"请计算123乘以456的结果\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "怎么学英语吧",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"how_to\", \"rewritten_query\": \"请提供系统性的英语学习方法和学习路线建议\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "帮我Python和Java哪个好吧",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"comparison\", \"rewritten_query\": \"请对比Python和Java编程语言的优缺点和适用场景\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "找一下那个文档嘛",
+    "output": "{\"intent\": \"tool\", \"sub_intent\": \"file_op\", \"rewritten_query\": \"请在指定目录中搜索包含关键字的文档文件\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "内存泄漏了",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"debug\", \"rewritten_query\": \"请帮我排查代码中的内存泄漏问题，定位泄漏点并提供修复方案\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "请问截个屏可以吗",
+    "output": "{\"intent\": \"tool\", \"sub_intent\": \"system\", \"rewritten_query\": \"请对当前屏幕进行截图操作\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "写个故事嘛",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"text_gen\", \"rewritten_query\": \"请创作一个短篇科幻故事，500字左右，情节紧凑\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能算一下中位数呢",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"statistics\", \"rewritten_query\": \"请计算这组数据的中位数\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "帮我你好呀",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"greeting\", \"rewritten_query\": \"你好，我想和你打个招呼\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "如何学好数学呢",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"how_to\", \"rewritten_query\": \"请提供系统性的数学学习方法和思维训练建议\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "请问开心到飞起可以吗",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"emotion\", \"rewritten_query\": \"我非常开心，想和人分享快乐\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "北京今天多少度",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"factual\", \"rewritten_query\": \"请查询北京市今天的实时气温数据\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能中国的首都是哪里呢",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"factual\", \"rewritten_query\": \"请告诉我中国的首都城市名称\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能怎么烤蛋糕",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"how_to\", \"rewritten_query\": \"请提供烤蛋糕的详细食谱和烘焙步骤\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "证明根号2是无理数呢",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"proof\", \"rewritten_query\": \"请用反证法证明根号2是无理数，给出完整证明过程\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能空指针异常",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"debug\", \"rewritten_query\": \"请排查代码中的空指针异常，定位原因并提供修复方案\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "Docker怎么用啊",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"explain\", \"rewritten_query\": \"请详细解释Docker容器技术的核心概念和基本使用方法\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "帮我翻成日语呢",
+    "output": "{\"intent\": \"tool\", \"sub_intent\": \"translate\", \"rewritten_query\": \"请将这段中文翻译成日语，使用标准敬语表达\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "写个todolist",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"write\", \"rewritten_query\": \"请用React编写一个待办事项应用，支持增删改和状态切换\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能写个排序算法呢",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"write\", \"rewritten_query\": \"请实现常见排序算法，包括冒泡、选择、插入排序\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能这个分布是正态的吗呢",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"statistics\", \"rewritten_query\": \"请分析这组数据是否符合正态分布，提供检验方法\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "内存泄漏了吧",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"debug\", \"rewritten_query\": \"请帮我排查代码中的内存泄漏问题，定位泄漏点并提供修复方案\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "请问写个二叉树遍历可以吗",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"write\", \"rewritten_query\": \"请用Python实现二叉树的前序、中序和后序遍历算法\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "写封请假邮件吧",
+    "output": "{\"intent\": \"tool\", \"sub_intent\": \"email\", \"rewritten_query\": \"请帮我撰写一封请假邮件，语气正式，包含请假原因和时长\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "我想解方程x²-5x+6=0啊",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"equation\", \"rewritten_query\": \"请求解一元二次方程x²-5x+6=0的所有根\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能帮我画一幅水墨画",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"image_gen\", \"rewritten_query\": \"请生成一幅中国传统水墨画风格的山水画图片\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "帮我写歌词一下",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"text_gen\", \"rewritten_query\": \"请创作一首关于友情的流行歌曲歌词，包含主歌副歌\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "帮我你有什么爱好",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"small_talk\", \"rewritten_query\": \"我想闲聊，了解你的兴趣爱好\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "这个函数返回值不对可以吗",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"debug\", \"rewritten_query\": \"请检查这个函数的逻辑错误，修复返回值不正确的问题\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "我想实现一个LRU缓存啊",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"write\", \"rewritten_query\": \"请用Python实现LRU缓存数据结构，支持get和put操作\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能你觉得自己有意识吗",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"small_talk\", \"rewritten_query\": \"我想闲聊，讨论AI是否有自我意识这个哲学问题\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "请问证明勾股定理",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"proof\", \"rewritten_query\": \"请给出勾股定理a²+b²=c²的证明过程\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "DNA的全称是什么啊",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"factual\", \"rewritten_query\": \"请告诉我DNA这个缩写的完整英文名称\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "我想求导数f(x)=x³+2x啊",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"equation\", \"rewritten_query\": \"请对函数f(x)=x³+2x求导数\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "做个短视频吧",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"video_gen\", \"rewritten_query\": \"请帮我制作一段15秒的短视频，内容为城市延时摄影\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "打开WiFi可以吗",
+    "output": "{\"intent\": \"tool\", \"sub_intent\": \"system\", \"rewritten_query\": \"请开启设备的WiFi无线网络连接\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "我想写个段子",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"text_gen\", \"rewritten_query\": \"请创作一个幽默搞笑的段子，适合社交媒体分享\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "生成一首歌嘛",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"audio_gen\", \"rewritten_query\": \"请创作一首流行风格的歌曲，包含旋律和人声，3分钟\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能DNA的全称是什么",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"factual\", \"rewritten_query\": \"请告诉我DNA这个缩写的完整英文名称\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "我好孤独",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"emotion\", \"rewritten_query\": \"我感到孤独，想找人说说话\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "帮我翻译一下这段话吧",
+    "output": "{\"intent\": \"tool\", \"sub_intent\": \"translate\", \"rewritten_query\": \"请将这段文字翻译成英文，保持原文语义和语气\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "帮我我的代码跑不通",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"debug\", \"rewritten_query\": \"请帮我调试代码，找出运行失败的原因并修复\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能帮我怎么安装Python嘛",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"how_to\", \"rewritten_query\": \"请提供Python编程环境的安装步骤和配置方法\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "求方差嘛",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"statistics\", \"rewritten_query\": \"请计算这组数据的方差，展示计算过程\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "请问做个产品宣传视频",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"video_gen\", \"rewritten_query\": \"请制作一段产品宣传视频，展示产品特色，30秒时长\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "气死我了嘛",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"emotion\", \"rewritten_query\": \"我非常生气，想倾诉发泄情绪\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "写个爬虫啊",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"write\", \"rewritten_query\": \"请用Python编写一个网页爬虫程序，支持多线程和反爬处理\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能生成动画",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"video_gen\", \"rewritten_query\": \"请生成一段动画视频，卡通风格，30秒时长\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "做个产品宣传视频可以吗",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"video_gen\", \"rewritten_query\": \"请制作一段产品宣传视频，展示产品特色，30秒时长\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "麻烦心情复杂",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"emotion\", \"rewritten_query\": \"我情绪复杂纠结，想梳理和倾诉内心感受\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "算一下中位数吧",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"statistics\", \"rewritten_query\": \"请计算这组数据的中位数\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能帮我性能太差了",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"refactor\", \"rewritten_query\": \"请优化代码性能，识别性能瓶颈并提供优化方案\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能证明勾股定理呢",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"proof\", \"rewritten_query\": \"请给出勾股定理a²+b²=c²的证明过程\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "麻烦圆周率前10位一下",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"computation\", \"rewritten_query\": \"请提供圆周率π的前10位小数\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能帮我帮我写个文案",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"text_gen\", \"rewritten_query\": \"请为这款产品撰写营销推广文案，突出核心卖点\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "请问帮我写歌词",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"text_gen\", \"rewritten_query\": \"请创作一首关于友情的流行歌曲歌词，包含主歌副歌\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "无聊，陪我说说话",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"small_talk\", \"rewritten_query\": \"我现在比较无聊，想和你聊聊天打发时间\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能算积分∫x²dx",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"equation\", \"rewritten_query\": \"请计算不定积分∫x²dx的结果\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "我想如何减肥",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"how_to\", \"rewritten_query\": \"请提供科学有效的减肥方法和饮食运动建议\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "怎么安装Python",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"how_to\", \"rewritten_query\": \"请提供Python编程环境的安装步骤和配置方法\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "如何做PPT",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"how_to\", \"rewritten_query\": \"请提供制作专业PPT演示文稿的步骤和技巧\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "麻烦解方程组x+y=5, x-y=1一下",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"equation\", \"rewritten_query\": \"请求解二元一次方程组x+y=5, x-y=1的解\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "我想做个Vlog片头啊",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"video_gen\", \"rewritten_query\": \"请制作一段Vlog视频片头动画，时尚简约风格，5秒\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "太重复了，抽个函数",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"refactor\", \"rewritten_query\": \"请提取重复代码为公共函数，减少冗余，提高复用性\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "帮我回一下这封邮件吧",
+    "output": "{\"intent\": \"tool\", \"sub_intent\": \"email\", \"rewritten_query\": \"请帮我回复这封邮件，需要确认回复内容\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "证明勾股定理呢",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"proof\", \"rewritten_query\": \"请给出勾股定理a²+b²=c²的证明过程\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "请问水的化学式",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"factual\", \"rewritten_query\": \"请告诉我水的化学分子式\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "做个表情包嘛",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"image_gen\", \"rewritten_query\": \"请生成一套搞笑表情包图片，可爱卡通风格\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "实现一个LRU缓存嘛",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"write\", \"rewritten_query\": \"请用Python实现LRU缓存数据结构，支持get和put操作\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "我想中翻英啊",
+    "output": "{\"intent\": \"tool\", \"sub_intent\": \"translate\", \"rewritten_query\": \"请将这段中文内容翻译成英文\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "这段代码有bug可以吗",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"debug\", \"rewritten_query\": \"请帮我排查代码中的bug，分析错误原因并提供修复方案\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "最近有什么好看的剧可以吗",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"small_talk\", \"rewritten_query\": \"我想闲聊，希望你推荐最近热门的电视剧\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "做个短视频嘛",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"video_gen\", \"rewritten_query\": \"请帮我制作一段15秒的短视频，内容为城市延时摄影\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能未来什么行业最有前景呢",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"opinion\", \"rewritten_query\": \"请分析未来十年最有发展前景的行业和原因\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "心情复杂",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"emotion\", \"rewritten_query\": \"我情绪复杂纠结，想梳理和倾诉内心感受\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "我想远程办公好不好",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"opinion\", \"rewritten_query\": \"请分析远程办公的利弊和适用条件\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能帮我怎么写简历",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"how_to\", \"rewritten_query\": \"请提供专业简历的撰写方法和模板建议\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "请问写个todolist可以吗",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"write\", \"rewritten_query\": \"请用React编写一个待办事项应用，支持增删改和状态切换\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "写个正则匹配一下",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"write\", \"rewritten_query\": \"请编写正则表达式匹配并提取文本中的特定模式\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能我好孤独",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"emotion\", \"rewritten_query\": \"我感到孤独，想找人说说话\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "写个剧本一下",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"text_gen\", \"rewritten_query\": \"请创作一个5分钟短剧剧本，都市题材，包含对话和场景描写\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "hello",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"greeting\", \"rewritten_query\": \"你好，我想和你打个招呼\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "帮我这段代码能精简吗吧",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"refactor\", \"rewritten_query\": \"请精简重构代码，消除冗余逻辑，使用更简洁的写法\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "帮我概率题：抛硬币3次全是正面的概率吧",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"statistics\", \"rewritten_query\": \"请计算连续抛3次硬币都出现正面的概率\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能帮我你是谁嘛",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"small_talk\", \"rewritten_query\": \"我想了解一下你是什么AI助手\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "你会做什么吧",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"small_talk\", \"rewritten_query\": \"我想了解你的能力和功能范围\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "如何减肥",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"how_to\", \"rewritten_query\": \"请提供科学有效的减肥方法和饮食运动建议\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "麻烦帮我P一下这张图一下",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"image_gen\", \"rewritten_query\": \"请对这张图片进行编辑处理，优化画质和色彩\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "早安嘛",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"greeting\", \"rewritten_query\": \"早上好，我想和你打个招呼\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能写个正则匹配呢",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"write\", \"rewritten_query\": \"请编写正则表达式匹配并提取文本中的特定模式\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "晚上好",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"greeting\", \"rewritten_query\": \"晚上好，我想和你打个招呼\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能帮我早安",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"greeting\", \"rewritten_query\": \"早上好，我想和你打个招呼\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "怎么安装Python一下",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"how_to\", \"rewritten_query\": \"请提供Python编程环境的安装步骤和配置方法\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "帮我写歌词嘛",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"text_gen\", \"rewritten_query\": \"请创作一首关于友情的流行歌曲歌词，包含主歌副歌\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "你觉得AI会取代人类吗",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"opinion\", \"rewritten_query\": \"请分析人工智能是否会取代人类工作的观点和论据\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "请问索引越界了",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"debug\", \"rewritten_query\": \"请检查数组索引越界的错误原因，提供修复方案\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "我想3的7次方",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"computation\", \"rewritten_query\": \"请计算3的7次方的数值结果\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "画一幅水墨画",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"image_gen\", \"rewritten_query\": \"请生成一幅中国传统水墨画风格的山水画图片\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "如何学好数学啊",
+    "output": "{\"intent\": \"search\", \"sub_intent\": \"how_to\", \"rewritten_query\": \"请提供系统性的数学学习方法和思维训练建议\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "请问Docker怎么用",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"explain\", \"rewritten_query\": \"请详细解释Docker容器技术的核心概念和基本使用方法\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "求方差",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"statistics\", \"rewritten_query\": \"请计算这组数据的方差，展示计算过程\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "性能太差了嘛",
+    "output": "{\"intent\": \"code\", \"sub_intent\": \"refactor\", \"rewritten_query\": \"请优化代码性能，识别性能瓶颈并提供优化方案\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "帮我1+1等于几吧",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"computation\", \"rewritten_query\": \"请计算1加1的结果\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "求标准差",
+    "output": "{\"intent\": \"math\", \"sub_intent\": \"statistics\", \"rewritten_query\": \"请计算这组数据的标准差，展示计算过程\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能帮我画一幅水墨画嘛",
+    "output": "{\"intent\": \"generation\", \"sub_intent\": \"image_gen\", \"rewritten_query\": \"请生成一幅中国传统水墨画风格的山水画图片\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "能不能帮我开心到飞起",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"emotion\", \"rewritten_query\": \"我非常开心，想和人分享快乐\"}"
+  },
+  {
+    "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
+    "input": "我想今天天气怎么样",
+    "output": "{\"intent\": \"chat\", \"sub_intent\": \"small_talk\", \"rewritten_query\": \"我想聊聊天，今天天气怎么样\"}"
+  }
+]

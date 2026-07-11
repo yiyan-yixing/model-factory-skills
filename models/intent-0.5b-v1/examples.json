@@ -1,0 +1,146 @@
+[
+  {
+    "input": "你好",
+    "parsed": {
+      "intent": "chat",
+      "sub_intent": "greeting",
+      "rewritten_query": "你好，我想和你打个招呼"
+    },
+    "raw": "{\"intent\": \"chat\", \"sub_intent\": \"greeting\", \"rewritten_query\": \"你好，我想和你打个招呼\"}"
+  },
+  {
+    "input": "画个好看的",
+    "parsed": {
+      "intent": "generation",
+      "sub_intent": "image_gen",
+      "rewritten_query": "请生成一张好看的图片，风格简约，色彩明亮"
+    },
+    "raw": "{\"intent\": \"generation\", \"sub_intent\": \"image_gen\", \"rewritten_query\": \"请生成一张好看的图片，风格简约，色彩明亮\"}"
+  },
+  {
+    "input": "帮我写个快排",
+    "parsed": {
+      "intent": "code",
+      "sub_intent": "write",
+      "rewritten_query": "请用Python实现快速排序算法，输入列表"
+    },
+    "raw": "{\"intent\": \"code\", \"sub_intent\": \"write\", \"rewritten_query\": \"请用Python实现快速排序算法，输入列表\"}"
+  },
+  {
+    "input": "什么是量子计算",
+    "parsed": {
+      "intent": "search",
+      "sub_intent": "factual",
+      "rewritten_query": "请解释量子计算的基本原理和应用"
+    },
+    "raw": "{\"intent\": \"search\", \"sub_intent\": \"factual\", \"rewritten_query\": \"请解释量子计算的基本原理和应用\"}"
+  },
+  {
+    "input": "1+1等于几",
+    "parsed": {
+      "intent": "math",
+      "sub_intent": "computation",
+      "rewritten_query": "请计算1+1的值"
+    },
+    "raw": "{\"intent\": \"math\", \"sub_intent\": \"computation\", \"rewritten_query\": \"请计算1+1的值\"}"
+  },
+  {
+    "input": "设个闹钟明天7点",
+    "parsed": {
+      "intent": "tool",
+      "sub_intent": "calendar",
+      "rewritten_query": "请设置明天7点的闹钟"
+    },
+    "raw": "{\"intent\": \"tool\", \"sub_intent\": \"calendar\", \"rewritten_query\": \"请设置明天7点的闹钟\"}"
+  },
+  {
+    "input": "帮我P一下这张图",
+    "parsed": {
+      "intent": "generation",
+      "sub_intent": "image_gen",
+      "rewritten_query": "请生成一张图片，背景为风景，色彩清新"
+    },
+    "raw": "{\"intent\": \"generation\", \"sub_intent\": \"image_gen\", \"rewritten_query\": \"请生成一张图片，背景为风景，色彩清新\"}"
+  },
+  {
+    "input": "代码跑不通怎么办",
+    "parsed": {
+      "intent": "code",
+      "sub_intent": "debug",
+      "rewritten_query": "请检查代码运行状态，分析错误原因并提供修复方案"
+    },
+    "raw": "{\"intent\": \"code\", \"sub_intent\": \"debug\", \"rewritten_query\": \"请检查代码运行状态，分析错误原因并提供修复方案\"}"
+  },
+  {
+    "input": "解方程x²-5x+6=0",
+    "parsed": {
+      "intent": "math",
+      "sub_intent": "equation",
+      "rewritten_query": "请解一元二次方程x²-5x+6=0"
+    },
+    "raw": "{\"intent\": \"math\", \"sub_intent\": \"equation\", \"rewritten_query\": \"请解一元二次方程x²-5x+6=0\"}"
+  },
+  {
+    "input": "翻译一下这段话",
+    "parsed": {
+      "intent": "code",
+      "sub_intent": "translate",
+      "rewritten_query": "请将这段英文翻译成中文，保持原意"
+    },
+    "raw": "{\"intent\": \"code\", \"sub_intent\": \"translate\", \"rewritten_query\": \"请将这段英文翻译成中文，保持原意\"}"
+  },
+  {
+    "input": "今天心情不好",
+    "parsed": {
+      "intent": "chat",
+      "sub_intent": "emotion",
+      "rewritten_query": "我想和你分享今天的心情，希望你也能感受到我的情绪"
+    },
+    "raw": "{\"intent\": \"chat\", \"sub_intent\": \"emotion\", \"rewritten_query\": \"我想和你分享今天的心情，希望你也能感受到我的情绪\"}"
+  },
+  {
+    "input": "做个短视频",
+    "parsed": {
+      "intent": "generation",
+      "sub_intent": "video_gen",
+      "rewritten_query": "请生成短视频，时长10分钟，风格轻松幽默"
+    },
+    "raw": "{\"intent\": \"generation\", \"sub_intent\": \"video_gen\", \"rewritten_query\": \"请生成短视频，时长10分钟，风格轻松幽默\"}"
+  },
+  {
+    "input": "无聊想聊天",
+    "parsed": {
+      "intent": "chat",
+      "sub_intent": "small_talk",
+      "rewritten_query": "我无聊，想和你闲聊，聊聊天"
+    },
+    "raw": "{\"intent\": \"chat\", \"sub_intent\": \"small_talk\", \"rewritten_query\": \"我无聊，想和你闲聊，聊聊天\"}"
+  },
+  {
+    "input": "怎么学英语",
+    "parsed": {
+      "intent": "search",
+      "sub_intent": "how_to",
+      "rewritten_query": "请提供学习英语的建议和方法"
+    },
+    "raw": "{\"intent\": \"search\", \"sub_intent\": \"how_to\", \"rewritten_query\": \"请提供学习英语的建议和方法\"}"
+  },
+  {
+    "input": "帮我整理一下文件",
+    "parsed": {
+      "intent": "tool",
+      "sub_intent": "file_manager",
+      "rewritten_query": "请将当前目录下的所有文件和文件夹整理成一个文件夹"
+    },
+    "raw": "{\"intent\": \"tool\", \"sub_intent\": \"file_manager\", \"rewritten_query\": \"请将当前目录下的所有文件和文件夹整理成一个文件夹\"}"
+  },
+  {
+    "input": "算一下平均数",
+    "parsed": {
+      "intent": "math",
+      "sub_intent": "statistics",
+      "rewritten_query": "请计算这组数据的平均数"
+    },
+    "raw": "{\"intent\": \"math\", \"sub_intent\": \"statistics\", \"rewritten_query\": \"请计算这组数据的平均数\"}"
+  }
+]

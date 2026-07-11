@@ -1,0 +1,46 @@
+# Intent Recognition API Server
+# Lightweight Docker image for serving the merged intent model
+#
+# Build:
+#   docker build -f Dockerfile.serve -t intent-api:latest .
+#
+# Run:
+#   docker run -p 8100:8100 intent-api:latest
+#
+# Test:
+#   curl http://localhost:8100/health
+#   curl -X POST http://localhost:8100/intent \
+#     -H "Content-Type: application/json" \
+#     -d '{"query": "帮我画个猫"}'
+
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install only runtime dependencies (no training libs)
+RUN pip install --no-cache-dir \
+    torch==2.7.0 \
+    transformers>=5.0.0 \
+    fastapi>=0.100.0 \
+    uvicorn>=0.30.0 \
+    pydantic>=2.0.0 \
+    safetensors>=0.4.0 \
+    accelerate>=1.0.0
+
+# Copy serving script
+COPY scripts/serve_intent.py /app/serve_intent.py
+
+# Copy merged model (standalone, no peft needed)
+COPY models/intent-0.5b-v1/merged/ /app/models/intent-0.5b-v1/merged/
+
+# Environment
+ENV PORT=8100
+ENV DEVICE=cpu
+ENV MODEL_PATH=/app/models/intent-0.5b-v1/merged
+
+EXPOSE 8100
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8100/health')" || exit 1
+
+CMD ["python3", "/app/serve_intent.py", "--port", "8100", "--device", "cpu", "--model-path", "/app/models/intent-0.5b-v1/merged"]
