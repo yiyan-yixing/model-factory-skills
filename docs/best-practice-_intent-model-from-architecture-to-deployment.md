@@ -782,6 +782,202 @@ curl http://localhost:8100/health
 | MPS (M4 Max) | ~50-200ms (预估) | ~300-800ms (预估) | 推理时 MPS 正常，只有训练有兼容问题 |
 | Docker (Linux CPU) | ~800-1200ms (预估) | ~4000-6000ms (预估) | 取决于服务器配置 |
 
+### 7.5 Step 4：交互式测试页面
+
+部署完成后，需要一个直观的方式让团队验证模型效果。我们实现了一个自包含的测试页面 `test-page.html`，由 FastAPI 的 `GET /` 端点自动服务。
+
+**设计目标**：
+- 无需额外工具，浏览器打开即用
+- 展示推理结果的同时，展示代码调用方式和返回结果，方便开发者集成
+- 支持单条和批量测试
+
+**页面架构**：
+
+```
+┌──────────────────────────────────────────────┐
+│  🧠 意图识别 + Query 改写                    │
+│  Qwen2.5-0.5B LoRA · 6 粗意图 / 25 细意图   │
+├──────────────────────────────────────────────┤
+│  🟢 服务正常  │  模型: intent-0.5b-v1  │  CPU  │
+├──────────────────────────────────────────────┤
+│  输入: [帮我画个猫________________] [识别]    │
+│  快速测试: 你好 | 画个猫 | 写个快排 | ⚡批量  │
+├──────────────────────────────────────────────┤
+│  📥 帮我画个猫                   推理 1015ms  │
+│  [🎨 生成] [image_gen]                       │
+│  ✏️ 改写: 请生成一张猫的卡通画，画风可爱      │
+├──────────────────────────────────────────────┤
+│  cURL  │  Python  │  JavaScript              │
+│──────────────────────────────────────────────│
+│  curl -X POST http://localhost:8100/intent \ │
+│    -H "Content-Type: application/json" \     │
+│    -d '{"query": "帮我画个猫"}'              │
+├──────────────────────────────────────────────┤
+│  📦 返回结果                                 │
+│  {                                           │
+│    "query": "帮我画个猫",                    │
+│    "intent": "generation",                   │
+│    "sub_intent": "image_gen",                │
+│    "rewritten_query": "请生成一张猫的...",   │
+│    "parse_success": true,                    │
+│    "latency_ms": 1014.9                      │
+│  }                                           │
+└──────────────────────────────────────────────┘
+```
+
+**FastAPI 路由——自动服务测试页面**：
+
+```python
+@app.get("/", response_class=HTMLResponse)
+async def test_page():
+    """Serve the interactive test page."""
+    html_path = Path(__file__).parent / "test-page.html"
+    if html_path.exists():
+        return html_path.read_text(encoding="utf-8")
+    return HTMLResponse("<h1>Test page not found</h1>", status_code=404)
+```
+
+**三种语言调用示例**：
+
+单条推理——cURL：
+
+```bash
+# 单条意图识别
+curl -X POST http://localhost:8100/intent \
+  -H "Content-Type: application/json" \
+  -d '{"query": "帮我画个猫"}'
+```
+
+返回：
+
+```json
+{
+  "query": "帮我画个猫",
+  "intent": "generation",
+  "sub_intent": "image_gen",
+  "rewritten_query": "请生成一张猫的卡通画，画风可爱",
+  "raw_output": "{\"intent\": \"generation\", \"sub_intent\": \"image_gen\", \"rewritten_query\": \"请生成一张猫的卡通画，画风可爱\"}",
+  "parse_success": true,
+  "latency_ms": 1014.9
+}
+```
+
+单条推理——Python：
+
+```python
+import httpx
+
+resp = httpx.post(
+    "http://localhost:8100/intent",
+    json={"query": "帮我画个猫"},
+    timeout=10.0,
+)
+result = resp.json()
+print(result["intent"], result["sub_intent"])
+print(result["rewritten_query"])
+# 输出:
+# generation image_gen
+# 请生成一张猫的卡通画，画风可爱
+```
+
+单条推理——JavaScript：
+
+```javascript
+const resp = await fetch("http://localhost:8100/intent", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ query: "帮我画个猫" }),
+});
+const result = await resp.json();
+console.log(result.intent, result.sub_intent);
+console.log(result.rewritten_query);
+// 输出: generation image_gen
+// 请生成一张猫的卡通画，画风可爱
+```
+
+批量推理——cURL：
+
+```bash
+# 批量意图识别
+curl -X POST http://localhost:8100/intent/batch \
+  -H "Content-Type: application/json" \
+  -d '{"queries": ["你好", "画个好看的", "帮我写个快排", "什么是量子计算", "1+1等于几"]}'
+```
+
+返回：
+
+```json
+{
+  "results": [
+    {
+      "query": "你好",
+      "intent": "chat",
+      "sub_intent": "greeting",
+      "rewritten_query": "你好，我想和你打个招呼",
+      "parse_success": true,
+      "latency_ms": 1012.0
+    },
+    {
+      "query": "画个好看的",
+      "intent": "generation",
+      "sub_intent": "image_gen",
+      "rewritten_query": "请生成一张好看的图片，风格简约，色彩明亮",
+      "parse_success": true,
+      "latency_ms": 1085.0
+    }
+  ],
+  "total_latency_ms": 5208.0
+}
+```
+
+批量推理——Python：
+
+```python
+import httpx
+
+resp = httpx.post(
+    "http://localhost:8100/intent/batch",
+    json={"queries": ["你好", "画个好看的", "帮我写个快排"]},
+    timeout=60.0,
+)
+data = resp.json()
+for r in data["results"]:
+    print(f'{r["query"]:20s} → {r["intent"]}/{r["sub_intent"]}')
+print(f'Total: {data["total_latency_ms"]:.0f}ms')
+# 输出:
+# 你好                  → chat/greeting
+# 画个好看的             → generation/image_gen
+# 帮我写个快排           → code/write
+# Total: 5208ms
+```
+
+**页面功能清单**：
+
+| 功能 | 说明 |
+|------|------|
+| 单条推理 | 输入框 + 回车/点击按钮 |
+| 快速标签 | 10 个预置 query 一键测试 |
+| 批量测试 | 15 条 query 一次跑完，显示总耗时 |
+| 意图徽章 | 彩色标签区分 6 种意图（对话/搜索/生成/代码/数学/工具） |
+| 改写展示 | 青色高亮显示改写后的 query |
+| 代码调用 | cURL / Python / JavaScript 三种语言 Tab 切换 |
+| 返回结果 | JSON 语法高亮（key/str/num/bool 分色） |
+| 一键复制 | 代码块右上角复制按钮 |
+| 服务状态 | 实时显示模型/设备/运行时间 |
+| 降级提示 | 解析失败时红色徽章 + 错误信息 |
+
+**访问方式**：
+
+```
+# 本地
+open http://localhost:8100/
+
+# Docker
+open http://your-server:8100/
+
+# 自动重定向到测试页面，API 端点同时可用
+```
+
 ---
 
 ## 八、应用集成（🚀 推广环 · 阶段 4 · @growth + @devrel）
@@ -944,6 +1140,7 @@ except httpx.TimeoutException:
 | **部署链路提前跑通** | 推广环和创造环并行，不等评测 Go 才开始做部署 |
 | **API 返回延迟指标** | `latency_ms` 字段为后续 SLA 和监控打基础 |
 | **Docker 只打包推理** | 不含训练脚本和数据，镜像更小更安全 |
+| **测试页面同步部署** | `GET /` 服务交互式测试页，展示代码调用和返回结果，开发者零成本上手 |
 
 ### 10.5 Apple Silicon 特别注意
 
@@ -979,7 +1176,8 @@ model-factory-skills/
 │   ├── eval_intent.py           # 评测 + Go/No-Go 判定
 │   ├── inference_intent.py      # CLI 交互式推理
 │   ├── merge_lora.py            # LoRA 合并 → 独立模型
-│   └── serve_intent.py          # FastAPI 推理服务（含双模式加载）
+│   ├── serve_intent.py          # FastAPI 推理服务（含双模式加载 + 测试页面路由）
+│   └── test-page.html           # 交互式测试页面（含代码调用示例 + 返回结果展示）
 ├── models/intent-0.5b-v1/
 │   ├── sft-checkpoint/          # LoRA 适配器 (8.3MB)
 │   │   ├── adapter_config.json  # LoRA 配置
