@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>意图识别 + Query 改写 — 测试页面</title>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #242835;
+            --border: #2e3348;
+            --text: #e4e6f0;
+            --text2: #8b8fa8;
+            --accent: #6c5ce7;
+            --accent2: #a29bfe;
+            --green: #00b894;
+            --red: #e17055;
+            --yellow: #fdcb6e;
+            --blue: #74b9ff;
+            --pink: #fd79a8;
+            --orange: #e17055;
+            --cyan: #81ecec;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent2), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        .header p {
+            color: var(--text2);
+            font-size: 14px;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+        .status-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: pulse 2s infinite;
+        }
+        .status-dot.offline { background: var(--red); animation: none; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* Input Area */
+        .input-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .input-section label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text2);
+        }
+        .input-row {
+            display: flex;
+            gap: 12px;
+        }
+        .input-row input {
+            flex: 1;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 16px;
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .input-row input:focus {
+            border-color: var(--accent);
+        }
+        .input-row input::placeholder {
+            color: var(--text2);
+            opacity: 0.6;
+        }
+        .btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .btn:hover { background: var(--accent2); transform: translateY(-1px); }
+        .btn:active { transform: translateY(0); }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Quick Examples */
+        .examples {
+            margin-top: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .examples span {
+            font-size: 12px;
+            color: var(--text2);
+            margin-right: 4px;
+            line-height: 30px;
+        }
+        .chip {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 4px 14px;
+            font-size: 13px;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .chip:hover {
+            border-color: var(--accent);
+            background: rgba(108, 92, 231, 0.1);
+        }
+
+        /* Result Card */
+        .result-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .result-query {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .result-latency {
+            font-size: 13px;
+            color: var(--text2);
+        }
+
+        .intent-badges {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .badge-chat { background: rgba(253, 203, 110, 0.15); color: var(--yellow); }
+        .badge-search { background: rgba(116, 185, 255, 0.15); color: var(--blue); }
+        .badge-generation { background: rgba(253, 121, 168, 0.15); color: var(--pink); }
+        .badge-code { background: rgba(108, 92, 231, 0.15); color: var(--accent2); }
+        .badge-math { background: rgba(0, 184, 148, 0.15); color: var(--green); }
+        .badge-tool { background: rgba(225, 112, 85, 0.15); color: var(--orange); }
+        .badge-error { background: rgba(225, 112, 85, 0.15); color: var(--red); }
+
+        .rewrite-section {
+            background: var(--surface2);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+        }
+        .rewrite-label {
+            font-size: 12px;
+            color: var(--text2);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .rewrite-text {
+            font-size: 15px;
+            line-height: 1.5;
+            color: var(--cyan);
+        }
+
+        /* Error state */
+        .result-card.error .result-query { color: var(--red); }
+        .result-card.error .rewrite-text { color: var(--text2); }
+
+        /* Loading spinner */
+        .loading {
+            text-align: center;
+            padding: 24px;
+            color: var(--text2);
+        }
+        .spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 8px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Batch Results */
+        .batch-header {
+            font-size: 14px;
+            color: var(--text2);
+            margin-bottom: 16px;
+            padding-left: 4px;
+        }
+
+        /* Code & Response Section */
+        .code-section {
+            background: var(--surface2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .code-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+        }
+        .code-tab {
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text2);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            background: none;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+        }
+        .code-tab:hover { color: var(--text); }
+        .code-tab.active {
+            color: var(--accent2);
+            border-bottom-color: var(--accent);
+        }
+        .code-block {
+            padding: 12px 16px;
+            overflow-x: auto;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 12.5px;
+            line-height: 1.6;
+            color: var(--text);
+            white-space: pre;
+            position: relative;
+        }
+        .code-block .kw { color: var(--accent2); }
+        .code-block .str { color: var(--green); }
+        .code-block .cmt { color: var(--text2); font-style: italic; }
+        .code-block .key { color: var(--cyan); }
+        .code-block .num { color: var(--orange); }
+
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 4px 10px;
+            font-size: 11px;
+            color: var(--text2);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover { color: var(--text); border-color: var(--accent); }
+
+        .response-label {
+            font-size: 12px;
+            color: var(--text2);
+            padding: 12px 16px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            color: var(--text2);
+            font-size: 13px;
+        }
+        .footer a {
+            color: var(--accent2);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container { padding: 16px; }
+            .input-row { flex-direction: column; }
+            .btn { width: 100%; }
+            .header h1 { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🧠 意图识别 + Query 改写</h1>
+            <p>Qwen2.5-0.5B LoRA 微调 · 6 粗意图 / 25 细意图 · 实时推理</p>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-item">
+                <div class="status-dot" id="statusDot"></div>
+                <span id="statusText">检测中...</span>
+            </div>
+            <div class="status-item" id="modelInfo">模型: —</div>
+            <div class="status-item" id="deviceInfo">设备: —</div>
+        </div>
+
+        <!-- Input -->
+        <div class="input-section">
+            <label>输入用户 Query</label>
+            <div class="input-row">
+                <input type="text" id="queryInput" placeholder="输入你想测试的 query，例如：帮我画个猫" autofocus>
+                <button class="btn" id="sendBtn" onclick="sendQuery()">识别</button>
+            </div>
+            <div class="examples">
+                <span>快速测试：</span>
+                <div class="chip" onclick="setQuery('你好')">你好</div>
+                <div class="chip" onclick="setQuery('帮我画个猫')">帮我画个猫</div>
+                <div class="chip" onclick="setQuery('什么是量子计算')">什么是量子计算</div>
+                <div class="chip" onclick="setQuery('写个快排')">写个快排</div>
+                <div class="chip" onclick="setQuery('1+1等于几')">1+1等于几</div>
+                <div class="chip" onclick="setQuery('设个闹钟明天7点')">设个闹钟明天7点</div>
+                <div class="chip" onclick="setQuery('今天心情不好')">今天心情不好</div>
+                <div class="chip" onclick="setQuery('代码跑不通怎么办')">代码跑不通怎么办</div>
+                <div class="chip" onclick="setQuery('做个短视频')">做个短视频</div>
+                <div class="chip" onclick="setQuery('翻译一下这段话')">翻译一下这段话</div>
+                <div class="chip" onclick="runBatch()" style="background:rgba(108,92,231,0.15);border-color:var(--accent);color:var(--accent2)">⚡ 批量测试</div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div id="results"></div>
+
+        <!-- Footer -->
+        <div class="footer">
+            意图识别模型 v1 · Qwen2.5-0.5B + LoRA · <a href="/docs" target="_blank">API 文档</a> · <a href="/health" target="_blank">健康检查</a>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+        const INTENT_COLORS = {
+            chat: 'chat', search: 'search', generation: 'generation',
+            code: 'code', math: 'math', tool: 'tool'
+        };
+        const INTENT_LABELS = {
+            chat: '💬 对话', search: '🔍 搜索', generation: '🎨 生成',
+            code: '💻 代码', math: '🔢 数学', tool: '🔧 工具'
+        };
+
+        // Check health on load
+        async function checkHealth() {
+            try {
+                const resp = await fetch(`${API_BASE}/health`);
+                const data = await resp.json();
+                document.getElementById('statusDot').className = 'status-dot';
+                document.getElementById('statusText').textContent = '服务正常';
+                document.getElementById('modelInfo').textContent = `模型: ${data.model}`;
+                document.getElementById('deviceInfo').textContent = `设备: ${data.device} · 运行 ${Math.round(data.uptime_seconds)}s`;
+            } catch (e) {
+                document.getElementById('statusDot').className = 'status-dot offline';
+                document.getElementById('statusText').textContent = '服务离线';
+            }
+        }
+        checkHealth();
+        setInterval(checkHealth, 15000);
+
+        // Set query from chip
+        function setQuery(q) {
+            document.getElementById('queryInput').value = q;
+            sendQuery();
+        }
+
+        // Enter key
+        document.getElementById('queryInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') sendQuery();
+        });
+
+        // Store last raw response for code display
+        let lastRawResponse = null;
+        let lastQuery = null;
+
+        // Send single query
+        async function sendQuery() {
+            const input = document.getElementById('queryInput');
+            const query = input.value.trim();
+            if (!query) return;
+
+            const btn = document.getElementById('sendBtn');
+            btn.disabled = true;
+            btn.textContent = '识别中...';
+
+            const results = document.getElementById('results');
+            results.innerHTML = `<div class="loading"><div class="spinner"></div><br>正在推理...</div>`;
+
+            try {
+                const startTime = performance.now();
+                const resp = await fetch(`${API_BASE}/intent`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query })
+                });
+                const data = await resp.json();
+                const totalTime = ((performance.now() - startTime) / 1000).toFixed(2);
+
+                lastRawResponse = data;
+                lastQuery = query;
+
+                results.innerHTML = renderResult(data, totalTime, false, query);
+            } catch (e) {
+                results.innerHTML = renderError(query, e.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '识别';
+            }
+        }
+
+        // Batch test
+        async function runBatch() {
+            const queries = [
+                '你好', '画个好看的', '帮我写个快排', '什么是量子计算',
+                '1+1等于几', '设个闹钟明天7点', '今天心情不好', '代码跑不通怎么办',
+                '解方程x²-5x+6=0', '做个短视频', '翻译一下这段话', '怎么学英语',
+                '帮我P一下这张图', '无聊想聊天', '算一下平均数'
+            ];
+
+            const btn = document.getElementById('sendBtn');
+            btn.disabled = true;
+            btn.textContent = '批量推理中...';
+
+            const results = document.getElementById('results');
+            results.innerHTML = `<div class="loading"><div class="spinner"></div><br>批量推理 ${queries.length} 条...</div>`;
+
+            try {
+                const startTime = performance.now();
+                const resp = await fetch(`${API_BASE}/intent/batch`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ queries })
+                });
+                const data = await resp.json();
+                const totalTime = ((performance.now() - startTime) / 1000).toFixed(2);
+
+                let html = `<div class="batch-header">📊 批量测试 · ${data.results.length} 条 · 总耗时 ${totalTime}s · 服务端 ${data.total_latency_ms.toFixed(0)}ms</div>`;
+                // Batch code example
+                html += renderBatchCode(queries, data);
+                for (const r of data.results) {
+                    html += renderResult(r, null, true);
+                }
+                results.innerHTML = html;
+            } catch (e) {
+                results.innerHTML = renderError('批量测试', e.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '识别';
+            }
+        }
+
+        // Generate curl command
+        function curlCommand(query) {
+            return `curl -X POST ${API_BASE}/intent \\
+  -H "Content-Type: application/json" \\
+  -d '{"query": "${query.replace(/'/g, "'\\''")}'"}`;
+        }
+
+        // Generate Python code
+        function pythonCode(query) {
+            return `import httpx
+
+resp = httpx.post(
+    "${API_BASE}/intent",
+    json={"query": "${query}"},
+    timeout=10.0,
+)
+result = resp.json()
+print(result["intent"], result["sub_intent"])
+print(result["rewritten_query"])`;
+        }
+
+        // Generate JavaScript code
+        function jsCode(query) {
+            return `const resp = await fetch("${API_BASE}/intent", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ query: "${query}" }),
+});
+const result = await resp.json();
+console.log(result.intent, result.sub_intent);
+console.log(result.rewritten_query);`;
+        }
+
+        // Format JSON with syntax highlighting
+        function formatJson(obj) {
+            const json = JSON.stringify(obj, null, 2);
+            return json
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"([^"]+)":/g, '<span class="key">"$1"</span>:')
+                .replace(/: "([^"]*)"/g, ': <span class="str">"$1"</span>')
+                .replace(/: (\d+\.?\d*)/g, ': <span class="num">$1</span>')
+                .replace(/: (true|false|null)/g, ': <span class="num">$1</span>');
+        }
+
+        // Render code tabs for single query
+        function renderCodeSection(query, data) {
+            const tabId = 'code-' + Math.random().toString(36).substr(2, 8);
+            return `
+                <div class="code-section">
+                    <div class="code-tabs">
+                        <button class="code-tab active" onclick="switchTab(this, '${tabId}', 'curl')">cURL</button>
+                        <button class="code-tab" onclick="switchTab(this, '${tabId}', 'python')">Python</button>
+                        <button class="code-tab" onclick="switchTab(this, '${tabId}', 'js')">JavaScript</button>
+                    </div>
+                    <div class="code-block" id="${tabId}-curl" style="display:block">
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                        <span class="cmt"># 单条意图识别</span>
+                        ${escapeHtml(curlCommand(query))}
+                    </div>
+                    <div class="code-block" id="${tabId}-python" style="display:none">
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                        <span class="cmt"># pip install httpx</span>
+                        ${escapeHtml(pythonCode(query))}
+                    </div>
+                    <div class="code-block" id="${tabId}-js" style="display:none">
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                        <span class="cmt">// 浏览器 / Node.js fetch</span>
+                        ${escapeHtml(jsCode(query))}
+                    </div>
+                    <div class="response-label">📦 返回结果</div>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                        ${formatJson(data)}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render batch code section
+        function renderBatchCode(queries, data) {
+            const tabId = 'batch-' + Math.random().toString(36).substr(2, 8);
+            const queriesJson = JSON.stringify(queries.slice(0, 5), null, 2)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+            return `
+                <div class="code-section" style="margin-bottom:16px">
+                    <div class="code-tabs">
+                        <button class="code-tab active" onclick="switchTab(this, '${tabId}', 'curl')">cURL</button>
+                        <button class="code-tab" onclick="switchTab(this, '${tabId}', 'python')">Python</button>
+                    </div>
+                    <div class="code-block" id="${tabId}-curl" style="display:block">
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                        <span class="cmt"># 批量意图识别</span>
+curl -X POST ${API_BASE}/intent/batch \\
+  -H "Content-Type: application/json" \\
+  -d '{"queries": ${JSON.stringify(queries.slice(0, 5))}}'</div>
+                    <div class="code-block" id="${tabId}-python" style="display:none">
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                        <span class="cmt"># pip install httpx</span>
+import httpx
+
+resp = httpx.post(
+    "${API_BASE}/intent/batch",
+    json={"queries": ${JSON.stringify(queries.slice(0, 5))}},
+    timeout=60.0,
+)
+data = resp.json()
+for r in data["results"]:
+    print(f'{r["query"]:20s} → {r["intent"]}/{r["sub_intent"]}')
+print(f'Total: {data["total_latency_ms"]:.0f}ms')</div>
+                    <div class="response-label">📦 返回结果（前 2 条）</div>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                        ${formatJson({results: data.results.slice(0, 2), total_latency_ms: data.total_latency_ms})}
+                        <span class="cmt">  ... 共 ${data.results.length} 条</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Switch code tabs
+        function switchTab(btn, tabId, lang) {
+            const parent = btn.closest('.code-section');
+            parent.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            parent.querySelectorAll('.code-block[id^="' + tabId + '-"]').forEach(b => b.style.display = 'none');
+            const target = document.getElementById(`${tabId}-${lang}`);
+            if (target) target.style.display = 'block';
+        }
+
+        // Copy code
+        function copyCode(btn) {
+            const codeBlock = btn.closest('.code-block');
+            const text = codeBlock.textContent.replace('复制', '').trim();
+            navigator.clipboard.writeText(text).then(() => {
+                btn.textContent = '已复制 ✓';
+                setTimeout(() => { btn.textContent = '复制'; }, 1500);
+            });
+        }
+
+        // Render result card
+        function renderResult(data, clientTime, compact = false, query = null) {
+            const intentClass = INTENT_COLORS[data.intent] || 'error';
+            const intentLabel = data.parse_success
+                ? (INTENT_LABELS[data.intent] || data.intent)
+                : '❌ 解析失败';
+            const q = query || data.query;
+            const showCode = !compact && data.parse_success;
+
+            return `
+                <div class="result-card ${data.parse_success ? '' : 'error'}">
+                    <div class="result-header">
+                        <div class="result-query">📥 ${escapeHtml(data.query)}</div>
+                        <div class="result-latency">
+                            ${data.latency_ms ? `推理 ${data.latency_ms.toFixed(0)}ms` : ''}
+                            ${clientTime ? ` · 端到端 ${clientTime}s` : ''}
+                        </div>
+                    </div>
+                    <div class="intent-badges">
+                        <span class="badge badge-${intentClass}">${intentLabel}</span>
+                        ${data.sub_intent ? `<span class="badge badge-${intentClass}">${data.sub_intent}</span>` : ''}
+                    </div>
+                    <div class="rewrite-section">
+                        <div class="rewrite-label">✏️ 改写后 Query</div>
+                        <div class="rewrite-text">${escapeHtml(data.rewritten_query || data.raw_output || '—')}</div>
+                    </div>
+                    ${showCode ? renderCodeSection(q, data) : ''}
+                </div>
+            `;
+        }
+
+        // Render error
+        function renderError(query, message) {
+            return `
+                <div class="result-card error">
+                    <div class="result-header">
+                        <div class="result-query">📥 ${escapeHtml(query)}</div>
+                    </div>
+                    <div class="intent-badges">
+                        <span class="badge badge-error">❌ 请求失败</span>
+                    </div>
+                    <div class="rewrite-section">
+                        <div class="rewrite-label">错误信息</div>
+                        <div class="rewrite-text">${escapeHtml(message)}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Escape HTML
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

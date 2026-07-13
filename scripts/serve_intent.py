@@ -20,11 +20,14 @@ import os
 import re
 import time
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import List, Optional
 
 import torch
 from pydantic import BaseModel, Field
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # ============================================================
@@ -311,6 +314,15 @@ async def health_check():
         device=mgr.device or "unknown",
         uptime_seconds=round(uptime, 1),
     )
+
+
+@app.get("/", response_class=HTMLResponse)
+async def test_page():
+    """Serve the interactive test page."""
+    html_path = Path(__file__).parent / "test-page.html"
+    if html_path.exists():
+        return html_path.read_text(encoding="utf-8")
+    return HTMLResponse("<h1>Test page not found</h1><p>Place test-page.html in scripts/</p>", status_code=404)
 
 
 def main():
