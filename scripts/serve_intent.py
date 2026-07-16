@@ -1,17 +1,30 @@
 #!/usr/bin/env python3
 """
-Intent Recognition + Query Rewriting API Server.
+意图识别 + Query 改写 API 服务
+
+自包含部署版本 — 所有路径基于脚本所在目录解析。
+放到 /home/work/baidu/new-yiyan/intent/ 下即可运行，无需额外配置。
+
+目录结构:
+  intent/
+  ├── serve_intent.py              ← 本文件
+  ├── test-page.html               ← 测试页面
+  ├── start.sh                     ← 启动脚本
+  ├── requirements-serve.txt       ← Python 依赖
+  ├── models/intent-0.5b-v1/merged/  ← 合并后模型
+  └── data/intent/schema.json        ← 意图分类体系
 
 Usage:
-  python3 scripts/serve_intent.py                     # Default (merged model, port 8100)
-  python3 scripts/serve_intent.py --port 9000          # Custom port
-  python3 scripts/serve_intent.py --device mps         # Use MPS acceleration
-  python3 scripts/serve_intent.py --lora               # Load base + LoRA (slower startup)
+  bash start.sh                                  # 默认启动
+  python3 serve_intent.py --port 9000             # 自定义端口
+  python3 serve_intent.py --device cuda           # GPU 推理
 
-API Endpoints:
-  POST /intent         — Single query intent recognition
-  POST /intent/batch   — Batch query intent recognition
-  GET  /health         — Health check
+API:
+  POST /intent         单条意图识别
+  POST /intent/batch   批量意图识别
+  GET  /health         健康检查
+  GET  /               测试页面
+  GET  /schema         意图分类体系
 """
 
 import argparse
@@ -21,35 +34,38 @@ import re
 import time
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 import torch
 from pydantic import BaseModel, Field
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse, FileResponse
-from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse, JSONResponse
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # ============================================================
-# Configuration
+# Configuration — 所有路径基于脚本所在目录
 # ============================================================
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DEFAULT_MERGED = os.path.join(PROJECT_DIR, "models", "intent-0.5b-v1", "merged")
-DEFAULT_BASE = os.path.join(PROJECT_DIR, "models", "Qwen2.5-0.5B-base")
-DEFAULT_ADAPTER = os.path.join(PROJECT_DIR, "models", "intent-0.5b-v1", "sft-checkpoint")
+BASE_DIR = Path(__file__).resolve().parent
+DEFAULT_MERGED = str(BASE_DIR / "models" / "intent-0.5b-v1" / "merged")
+DEFAULT_BASE = str(BASE_DIR / "models" / "Qwen2.5-0.5B-base")
+DEFAULT_ADAPTER = str(BASE_DIR / "models" / "intent-0.5b-v1" / "sft-checkpoint")
+SCHEMA_PATH = BASE_DIR / "data" / "intent" / "schema.json"
+EXAMPLES_PATH = BASE_DIR / "models" / "intent-0.5b-v1" / "examples.json"
+EVAL_PATH = BASE_DIR / "models" / "intent-0.5b-v1" / "eval_results.json"
 
 INSTRUCTION = "分析用户输入的意图，输出意图分类和改写后的查询。"
 MAX_NEW_TOKENS = 128
 MAX_INPUT_LENGTH = 256
 
+
 # ============================================================
 # Pydantic models
 # ============================================================
 class IntentRequest(BaseModel):
-    query: str = Field(..., min_length=1, max_length=512, description="User input query")
+    query: str = Field(..., min_length=1, max_length=512, description="用户输入")
 
 class BatchIntentRequest(BaseModel):
-    queries: List[str] = Field(..., min_length=1, max_length=64, description="List of queries")
+    queries: List[str] = Field(..., min_length=1, max_length=64, description="用户输入列表")
 
 class IntentResponse(BaseModel):
     query: str
@@ -70,16 +86,19 @@ class HealthResponse(BaseModel):
     device: str
     uptime_seconds: float
 
+class SchemaResponse(BaseModel):
+    schema: Dict
+    version: str
+
 
 # ============================================================
-# Core logic (reused from inference_intent.py)
+# Core logic
 # ============================================================
 def parse_output(text: str) -> Optional[dict]:
-    """Parse model output to extract intent JSON."""
+    """解析模型输出，提取意图 JSON"""
     if "### Response:" in text:
         text = text.split("### Response:")[-1].strip()
 
-    # Try direct JSON parse
     try:
         result = json.loads(text)
         if "intent" in result:
@@ -87,7 +106,6 @@ def parse_output(text: str) -> Optional[dict]:
     except json.JSONDecodeError:
         pass
 
-    # Try to find JSON object with intent key
     json_match = re.search(r'\{[^{}]*"intent"[^{}]*\}', text)
     if json_match:
         try:
@@ -96,7 +114,6 @@ def parse_output(text: str) -> Optional[dict]:
         except json.JSONDecodeError:
             pass
 
-    # Try to find any JSON object
     json_match = re.search(r'\{.*\}', text, re.DOTALL)
     if json_match:
         try:
@@ -110,7 +127,7 @@ def parse_output(text: str) -> Optional[dict]:
 
 
 def predict(model, tokenizer, query: str, device: str) -> dict:
-    """Run intent prediction on a single query. Returns (parsed, raw_text, latency_ms)."""
+    """单条推理"""
     prompt = (
         f"### Instruction:\n{INSTRUCTION}\n\n"
         f"### Input:\n{query}\n\n"
@@ -138,10 +155,10 @@ def predict(model, tokenizer, query: str, device: str) -> dict:
 
 
 # ============================================================
-# Model loader
+# Model Manager
 # ============================================================
 class ModelManager:
-    """Manages model lifecycle: load, predict, health."""
+    """管理模型生命周期"""
 
     def __init__(self):
         self.model = None
@@ -151,50 +168,42 @@ class ModelManager:
         self.model_name = ""
 
     def load(self, args):
-        """Load model based on CLI arguments."""
         self.device = args.device
         self.start_time = time.time()
 
-        # Determine device (prefer MPS on Apple Silicon, fallback to CPU)
-        if self.device == "mps":
+        if self.device == "cuda":
+            if not torch.cuda.is_available():
+                print("⚠️  CUDA 不可用，回退到 CPU")
+                self.device = "cpu"
+        elif self.device == "mps":
             if not torch.backends.mps.is_available():
-                print("⚠️  MPS not available, falling back to CPU")
+                print("⚠️  MPS 不可用，回退到 CPU")
                 self.device = "cpu"
 
-        # Auto-detect: if merged model exists, use it; otherwise use base + LoRA
         model_path = args.model_path
         use_lora = args.lora
 
         if not use_lora and os.path.isdir(DEFAULT_MERGED) and model_path == DEFAULT_MERGED:
-            # Use merged model (no peft dependency)
-            print(f"Loading merged model from {model_path}...")
+            print(f"📦 加载合并模型: {model_path}")
             self.model = AutoModelForCausalLM.from_pretrained(
-                model_path,
-                trust_remote_code=True,
-                torch_dtype=torch.float16,
+                model_path, trust_remote_code=True, torch_dtype=torch.float16,
             )
             self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
             self.model_name = "intent-0.5b-v1 (merged)"
         elif use_lora or not os.path.isdir(DEFAULT_MERGED):
-            # Use base + LoRA
             from peft import PeftModel
-            print(f"Loading base model from {DEFAULT_BASE}...")
+            print(f"📦 加载基座模型: {DEFAULT_BASE}")
             self.model = AutoModelForCausalLM.from_pretrained(
-                DEFAULT_BASE,
-                trust_remote_code=True,
-                torch_dtype=torch.float16,
+                DEFAULT_BASE, trust_remote_code=True, torch_dtype=torch.float16,
             )
-            print(f"Loading LoRA adapter from {DEFAULT_ADAPTER}...")
+            print(f"📦 加载 LoRA 适配器: {DEFAULT_ADAPTER}")
             self.model = PeftModel.from_pretrained(self.model, DEFAULT_ADAPTER)
             self.tokenizer = AutoTokenizer.from_pretrained(DEFAULT_ADAPTER, trust_remote_code=True)
             self.model_name = "intent-0.5b-v1 (base+LoRA)"
         else:
-            # Custom model path
-            print(f"Loading model from {model_path}...")
+            print(f"📦 加载自定义模型: {model_path}")
             self.model = AutoModelForCausalLM.from_pretrained(
-                model_path,
-                trust_remote_code=True,
-                torch_dtype=torch.float16,
+                model_path, trust_remote_code=True, torch_dtype=torch.float16,
             )
             self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
             self.model_name = f"custom ({os.path.basename(model_path)})"
@@ -204,52 +213,60 @@ class ModelManager:
 
         self.model.eval()
 
-        # Move to device
-        if self.device == "mps":
+        if self.device == "cuda":
+            self.model = self.model.to("cuda")
+        elif self.device == "mps":
             self.model = self.model.to("mps")
 
-        print(f"✅ Model loaded on {self.device}")
-        print(f"   Model: {self.model_name}")
+        print(f"✅ 模型加载完成: {self.model_name} on {self.device}")
 
     def predict_intent(self, query: str):
-        """Predict intent for a single query."""
         return predict(self.model, self.tokenizer, query, self.device)
 
 
-# Global model manager
 mgr = ModelManager()
 
 
 # ============================================================
-# FastAPI app with lifespan
+# FastAPI App
 # ============================================================
 @asynccontextmanager
 async def lifespan(application: FastAPI):
-    """Load model on startup, cleanup on shutdown."""
     args = application.state.args
-    print(f"\n🚀 Starting Intent Recognition API")
-    print(f"   Device: {args.device}")
-    print(f"   Model:  {'base+LoRA' if args.lora else args.model_path}")
+    print(f"\n🚀 启动意图识别服务")
+    print(f"   设备: {args.device}")
+    print(f"   模型: {'base+LoRA' if args.lora else args.model_path}")
+    print(f"   目录: {BASE_DIR}")
     mgr.load(args)
-    print(f"   Ready to serve!\n")
+    print(f"   服务地址: http://{args.host}:{args.port}")
+    print(f"   测试页面: http://{args.host}:{args.port}/")
+    print(f"   API 文档: http://{args.host}:{args.port}/docs\n")
     yield
-    # Shutdown: nothing special needed
-    print("Shutting down...")
+    print("服务关闭...")
 
 
 app = FastAPI(
-    title="Intent Recognition API",
-    description="意图识别 + Query 改写服务，基于 Qwen2.5-0.5B 微调模型",
+    title="意图识别 API",
+    description="意图识别 + Query 改写服务，基于 Qwen2.5-0.5B 微调模型。"
+                "支持 6 大意图分类 (chat/search/generation/code/math/tool) + 25 子意图。",
     version="1.0.0",
     lifespan=lifespan,
 )
 
 
-@app.post("/intent", response_model=IntentResponse)
+# ────────────────────────────────────────────────────────────
+# API: 意图识别
+# ────────────────────────────────────────────────────────────
+
+@app.post("/intent", response_model=IntentResponse, summary="单条意图识别")
 async def intent_recognition(req: IntentRequest):
-    """Classify intent and rewrite a single query."""
+    """
+    对单条用户输入进行意图识别和 Query 改写。
+
+    返回：粗意图 (intent)、细意图 (sub_intent)、改写查询 (rewritten_query)
+    """
     if mgr.model is None:
-        raise HTTPException(status_code=503, detail="Model not loaded")
+        raise HTTPException(status_code=503, detail="模型未加载")
 
     parsed, raw, latency_ms = mgr.predict_intent(req.query)
 
@@ -272,11 +289,11 @@ async def intent_recognition(req: IntentRequest):
         )
 
 
-@app.post("/intent/batch", response_model=BatchIntentResponse)
+@app.post("/intent/batch", response_model=BatchIntentResponse, summary="批量意图识别")
 async def intent_recognition_batch(req: BatchIntentRequest):
-    """Classify intent for a batch of queries."""
+    """对多条用户输入批量进行意图识别。"""
     if mgr.model is None:
-        raise HTTPException(status_code=503, detail="Model not loaded")
+        raise HTTPException(status_code=503, detail="模型未加载")
 
     start = time.time()
     results = []
@@ -304,9 +321,13 @@ async def intent_recognition_batch(req: BatchIntentRequest):
     return BatchIntentResponse(results=results, total_latency_ms=round(total_ms, 1))
 
 
-@app.get("/health", response_model=HealthResponse)
+# ────────────────────────────────────────────────────────────
+# API: 服务信息 & 集成支持
+# ────────────────────────────────────────────────────────────
+
+@app.get("/health", response_model=HealthResponse, summary="健康检查")
 async def health_check():
-    """Health check endpoint."""
+    """服务健康检查，供负载均衡 / K8s 探针使用。"""
     uptime = time.time() - mgr.start_time if mgr.start_time else 0
     return HealthResponse(
         status="ok" if mgr.model is not None else "loading",
@@ -316,25 +337,61 @@ async def health_check():
     )
 
 
-@app.get("/", response_class=HTMLResponse)
+@app.get("/schema", summary="意图分类体系")
+async def get_schema():
+    """
+    返回意图分类体系的完整定义，供其他服务了解可用的意图类别。
+
+    6 大粗意图 + 25 个细粒度子意图。
+    """
+    if SCHEMA_PATH.exists():
+        schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+        return {"schema": schema, "version": "1.0.0"}
+    return {"schema": {}, "version": "1.0.0", "note": "schema.json not found"}
+
+
+@app.get("/examples", summary="推理示例")
+async def get_examples():
+    """返回批量推理示例，供其他服务参考输入输出格式。"""
+    if EXAMPLES_PATH.exists():
+        examples = json.loads(EXAMPLES_PATH.read_text(encoding="utf-8"))
+        return {"examples": examples, "count": len(examples)}
+    return {"examples": [], "count": 0}
+
+
+@app.get("/eval", summary="模型评估指标")
+async def get_eval():
+    """返回模型评估指标，供其他服务判断模型质量。"""
+    if EVAL_PATH.exists():
+        return json.loads(EVAL_PATH.read_text(encoding="utf-8"))
+    return {"note": "eval_results.json not found"}
+
+
+@app.get("/", response_class=HTMLResponse, include_in_schema=False)
 async def test_page():
-    """Serve the interactive test page."""
-    html_path = Path(__file__).parent / "test-page.html"
+    """交互式测试页面。"""
+    html_path = BASE_DIR / "test-page.html"
     if html_path.exists():
         return html_path.read_text(encoding="utf-8")
-    return HTMLResponse("<h1>Test page not found</h1><p>Place test-page.html in scripts/</p>", status_code=404)
+    return HTMLResponse(
+        "<h1>测试页面未找到</h1><p>请将 test-page.html 放在 serve_intent.py 同目录</p>",
+        status_code=404,
+    )
 
+
+# ────────────────────────────────────────────────────────────
+# CLI
+# ────────────────────────────────────────────────────────────
 
 def main():
-    parser = argparse.ArgumentParser(description="Intent Recognition API Server")
-    parser.add_argument("--port", type=int, default=8100, help="Server port (default: 8100)")
-    parser.add_argument("--host", default="0.0.0.0", help="Server host (default: 0.0.0.0)")
-    parser.add_argument("--device", default="cpu", choices=["cpu", "mps"], help="Inference device")
-    parser.add_argument("--model-path", default=DEFAULT_MERGED, help="Path to model (default: merged model)")
-    parser.add_argument("--lora", action="store_true", help="Force base+LoRA mode instead of merged model")
+    parser = argparse.ArgumentParser(description="意图识别 API 服务")
+    parser.add_argument("--port", type=int, default=8100, help="服务端口 (默认: 8100)")
+    parser.add_argument("--host", default="0.0.0.0", help="服务地址 (默认: 0.0.0.0)")
+    parser.add_argument("--device", default="cpu", choices=["cpu", "cuda", "mps"], help="推理设备")
+    parser.add_argument("--model-path", default=DEFAULT_MERGED, help="模型路径 (默认: merged 模型)")
+    parser.add_argument("--lora", action="store_true", help="使用 base+LoRA 模式")
     args = parser.parse_args()
 
-    # Store args for lifespan
     app.state.args = args
 
     import uvicorn

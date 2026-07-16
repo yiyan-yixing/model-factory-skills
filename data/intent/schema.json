@@ -1,5 +1,6 @@
 {
-  "version": "1.0",
+  "version": "2.0",
+  "changelog": "v2: tool sub_intents expanded from 5 to 10 (added web_search, data_fetch, publish, code_exec, api_call); stratified split by sub_intent; double-prefix/double-suffix guard",
   "coarse_intents": [
     "chat",
     "search",
@@ -40,11 +41,16 @@
       "statistics"
     ],
     "tool": [
+      "api_call",
       "calendar",
+      "code_exec",
+      "data_fetch",
       "email",
       "file_op",
+      "publish",
       "system",
-      "translate"
+      "translate",
+      "web_search"
     ]
   },
   "output_format": {

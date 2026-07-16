@@ -7,6 +7,12 @@ Metrics:
 - Fine intent accuracy (sub_intent)
 - Per-class F1 score
 - Rewrite quality (JSON parse rate)
+
+Code review fixes (2026-07-14):
+- P1: Use torch.inference_mode() instead of torch.no_grad() for better perf
+- P2: Remove contradictory temperature=1.0 with do_sample=False
+- P2: Add try/except around json.loads for ground truth parsing
+- P2: Add try/except around model.generate() for MPS safety
 """
 
 import json
@@ -22,8 +28,16 @@ from peft import PeftModel
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL_PATH = os.path.join(PROJECT_DIR, "models", "Qwen2.5-0.5B-base")
-CHECKPOINT_DIR = os.path.join(PROJECT_DIR, "models", "intent-0.5b-v1", "sft-checkpoint")
+CHECKPOINT_DIR = os.path.join(PROJECT_DIR, "models", "intent-0.5b-v2", "best_model")
 DATA_DIR = os.path.join(PROJECT_DIR, "data", "intent")
+
+# Device auto-detection: MPS > CPU
+if torch.backends.mps.is_available():
+    DEVICE = torch.device("mps")
+    DEVICE_NAME = "MPS (Apple Silicon)"
+else:
+    DEVICE = torch.device("cpu")
+    DEVICE_NAME = "CPU"
 
 
 def parse_output(text):
@@ -56,6 +70,7 @@ def parse_output(text):
 def evaluate():
     print("=" * 60)
     print("Evaluation: Intent Classification + Query Rewriting")
+    print(f"Device: {DEVICE_NAME}")
     print("=" * 60)
 
     # Load test data
@@ -73,9 +88,10 @@ def evaluate():
     model = AutoModelForCausalLM.from_pretrained(
         MODEL_PATH,
         trust_remote_code=True,
-        torch_dtype=torch.float16,
-        device_map="auto",
+        torch_dtype=torch.float32,
+        low_cpu_mem_usage=True,
     )
+    model = model.to(DEVICE)
     model = PeftModel.from_pretrained(model, CHECKPOINT_DIR)
     model.eval()
     print("Model loaded")
@@ -96,7 +112,11 @@ def evaluate():
 
     for i, item in enumerate(test_data):
         # Ground truth
-        gt = json.loads(item["output"])
+        try:
+            gt = json.loads(item["output"])
+        except (json.JSONDecodeError, KeyError) as e:
+            print(f"  [!] Skipping sample {i}: invalid ground truth - {e}")
+            continue
 
         # Generate
         prompt = (
@@ -105,16 +125,26 @@ def evaluate():
             f"### Response:\n"
         )
         inputs = tokenizer(prompt, return_tensors="pt", truncation=True, max_length=256)
-        inputs = {k: v.to(model.device) for k, v in inputs.items()}
+        inputs = {k: v.to(DEVICE) for k, v in inputs.items()}
 
-        with torch.no_grad():
-            outputs = model.generate(
-                **inputs,
-                max_new_tokens=128,
-                do_sample=False,
-                temperature=1.0,
-                pad_token_id=tokenizer.pad_token_id,
-            )
+        try:
+            with torch.inference_mode():
+                outputs = model.generate(
+                    **inputs,
+                    max_new_tokens=128,
+                    do_sample=False,
+                    pad_token_id=tokenizer.pad_token_id,
+                )
+        except RuntimeError as e:
+            # MPS can occasionally OOM; skip this sample
+            print(f"  [!] Generate failed for sample {i}: {e}")
+            y_true_coarse.append(gt["intent"])
+            y_pred_coarse.append("generate_error")
+            y_true_fine.append(gt["sub_intent"])
+            y_pred_fine.append("generate_error")
+            if DEVICE.type == "mps":
+                torch.mps.empty_cache()
+            continue
 
         generated_ids = outputs[0][inputs["input_ids"].shape[1]:]
         generated_text = tokenizer.decode(generated_ids, skip_special_tokens=True).strip()
@@ -181,7 +211,7 @@ def evaluate():
     print("\n--- Go/No-Go ---")
     go = coarse_acc >= 0.90 and fine_acc >= 0.85 and parse_rate >= 0.90
     if go:
-        print(f"✅ GO — Coarse acc {coarse_acc:.2%} (≥90%), Fine acc {fine_acc:.2%} (≥85%), Parse rate {parse_rate:.2%} (≥90%)")
+        print(f"GO - Coarse acc {coarse_acc:.2%} (>=90%), Fine acc {fine_acc:.2%} (>=85%), Parse rate {parse_rate:.2%} (>=90%)")
     else:
         reasons = []
         if coarse_acc < 0.90:
@@ -190,7 +220,7 @@ def evaluate():
             reasons.append(f"Fine acc {fine_acc:.2%} < 85%")
         if parse_rate < 0.90:
             reasons.append(f"Parse rate {parse_rate:.2%} < 90%")
-        print(f"❌ NO-GO — {'; '.join(reasons)}")
+        print(f"NO-GO - {'; '.join(reasons)}")
 
     # Show parse errors
     if errors:
@@ -208,8 +238,9 @@ def evaluate():
         "parse_rate": parse_rate,
         "total_samples": total,
         "go_no_go": "Go" if go else "No-Go",
+        "device": DEVICE_NAME,
     }
-    results_path = os.path.join(PROJECT_DIR, "models", "intent-0.5b-v1", "eval_results.json")
+    results_path = os.path.join(PROJECT_DIR, "models", "intent-0.5b-v2", "eval_results.json")
     os.makedirs(os.path.dirname(results_path), exist_ok=True)
     with open(results_path, 'w') as f:
         json.dump(results, f, indent=2, ensure_ascii=False)

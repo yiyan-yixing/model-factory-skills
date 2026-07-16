@@ -33,3 +33,6 @@ models/Qwen2.5-*/
 
 # 合并后模型权重（只有配置/tokenizer 入库，权重文件由 .safetensors 规则排除）
 # models/intent-0.5b-v1/merged/ 的 config.json、tokenizer 等会入库
+
+# 部署包（含模型权重，不入库）
+intent*.tar.gz

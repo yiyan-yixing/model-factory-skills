@@ -2,11 +2,17 @@
 """
 Generate intent classification + query rewrite dataset.
 Simple, no infinite loops. Direct data writing.
+
+v2: Expanded tool category from 5 sub_intents to 10, base samples from 25 to 75+.
+    New sub_intents: web_search, data_fetch, publish, code_exec, api_call.
+    Stratified split by sub_intent for balanced coverage.
+    Guard against double-prefix/double-suffix in augmentation.
 """
 
 import json
 import os
 import random
+from collections import defaultdict
 
 random.seed(42)
 
@@ -162,21 +168,21 @@ SAMPLES = {
         ("2的10次方是多少", "computation", "请计算2的10次方的数值结果"),
         ("算一下15的阶乘", "computation", "请计算15的阶乘数值结果"),
         ("根号2约等于多少", "computation", "请计算根号2的近似值，保留到小数点后6位"),
-        ("圆周率前10位", "computation", "请提供圆周率π的前10位小数"),
+        ("圆周率前10位", "computation", "请提供圆周率pi的前10位小数"),
         ("100以内的质数有哪些", "computation", "请列出100以内所有质数的完整列表"),
         ("3的7次方", "computation", "请计算3的7次方的数值结果"),
         ("17乘以23", "computation", "请计算17乘以23的结果"),
         ("2的20次方等于多少", "computation", "请计算2的20次方的数值结果"),
-        ("解方程x²-5x+6=0", "equation", "请求解一元二次方程x²-5x+6=0的所有根"),
-        ("算积分∫x²dx", "equation", "请计算不定积分∫x²dx的结果"),
-        ("求导数f(x)=x³+2x", "equation", "请对函数f(x)=x³+2x求导数"),
+        ("解方程x^2-5x+6=0", "equation", "请求解一元二次方程x^2-5x+6=0的所有根"),
+        ("算积分", "equation", "请计算不定积分的结果"),
+        ("求导数f(x)=x^3+2x", "equation", "请对函数f(x)=x^3+2x求导数"),
         ("解方程组x+y=5, x-y=1", "equation", "请求解二元一次方程组x+y=5, x-y=1的解"),
-        ("求极限lim(x→0)sinx/x", "equation", "请计算极限lim(x→0)sinx/x的值"),
+        ("求极限", "equation", "请计算极限的值"),
         ("解3x+7=22", "equation", "请求解一元一次方程3x+7=22中x的值"),
-        ("求dy/dx 当y=x⁴-3x²+1", "equation", "请对函数y=x⁴-3x²+1求导数"),
-        ("解2x²+3x-5=0", "equation", "请求解一元二次方程2x²+3x-5=0的所有根"),
+        ("求dy/dx 当y=x^4-3x^2+1", "equation", "请对函数y=x^4-3x^2+1求导数"),
+        ("解2x^2+3x-5=0", "equation", "请求解一元二次方程2x^2+3x-5=0的所有根"),
         ("证明根号2是无理数", "proof", "请用反证法证明根号2是无理数，给出完整证明过程"),
-        ("证明勾股定理", "proof", "请给出勾股定理a²+b²=c²的证明过程"),
+        ("证明勾股定理", "proof", "请给出勾股定理a^2+b^2=c^2的证明过程"),
         ("证明素数有无穷多个", "proof", "请用反证法证明素数有无穷多个"),
         ("证明1+2+...+n=n(n+1)/2", "proof", "请用数学归纳法证明1到n的求和公式"),
         ("算一下平均数", "statistics", "请计算这组数据的算术平均数"),
@@ -187,53 +193,184 @@ SAMPLES = {
         ("这个分布是正态的吗", "statistics", "请分析这组数据是否符合正态分布，提供检验方法"),
     ],
     "tool": [
+        # --- calendar: schedule, reminder, alarm ---
         ("设个闹钟明天7点", "calendar", "请设置明天早上7:00的闹钟提醒"),
         ("提醒我下午3点开会", "calendar", "请设置今天下午3:00的会议提醒"),
         ("下周三有什么安排", "calendar", "请查询下周三的日程安排和待办事项"),
         ("帮我约个会议", "calendar", "请帮我创建一个新的会议日程，需要指定时间和参与者"),
         ("今天几号", "calendar", "请告诉我今天的日期和星期"),
         ("明天有什么安排", "calendar", "请查询明天的日程安排和待办事项"),
+        # --- email: compose, reply, forward, search ---
         ("发封邮件给张三", "email", "请帮我撰写并发送邮件给张三，需要确认邮件主题和内容"),
         ("帮我回一下这封邮件", "email", "请帮我回复这封邮件，需要确认回复内容"),
         ("检查未读邮件", "email", "请查询邮箱中所有未读邮件列表"),
         ("写封请假邮件", "email", "请帮我撰写一封请假邮件，语气正式，包含请假原因和时长"),
+        # --- translate: language translation ---
         ("翻译一下这段话", "translate", "请将这段文字翻译成英文，保持原文语义和语气"),
         ("这个英文什么意思", "translate", "请将这段英文翻译成中文，准确传达原文含义"),
         ("帮我翻成日语", "translate", "请将这段中文翻译成日语，使用标准敬语表达"),
         ("中翻英", "translate", "请将这段中文内容翻译成英文"),
         ("英翻中", "translate", "请将这段英文内容翻译成中文"),
+        # --- file_op: organize, rename, compress, search, delete ---
         ("帮我整理一下文件", "file_op", "请帮我整理指定目录下的文件，按类型分类归档"),
         ("重命名这个文件", "file_op", "请将指定文件重命名为新名称"),
         ("压缩这些文件", "file_op", "请将选定的文件和文件夹压缩为ZIP格式"),
         ("找一下那个文档", "file_op", "请在指定目录中搜索包含关键字的文档文件"),
         ("删掉这些临时文件", "file_op", "请删除指定目录下的临时文件和缓存"),
+        # --- system: device settings, network, hardware ---
         ("打开WiFi", "system", "请开启设备的WiFi无线网络连接"),
         ("调大音量", "system", "请将设备音量调大到80%"),
         ("截个屏", "system", "请对当前屏幕进行截图操作"),
         ("打开设置", "system", "请打开系统设置应用"),
         ("清理一下缓存", "system", "请清理应用的缓存数据，释放存储空间"),
+        # --- web_search: internet search, real-time info lookup ---
+        ("搜一下最近的新闻", "web_search", "请使用搜索引擎查询最新的热点新闻资讯"),
+        ("搜索一下这个词的含义", "web_search", "请在网络上搜索这个词的定义和详细解释"),
+        ("查查今天的热搜", "web_search", "请查询今日微博/百度热搜榜单"),
+        ("帮我搜一下附近的餐厅", "web_search", "请在地图服务上搜索附近的餐厅及评分"),
+        ("查一下航班信息", "web_search", "请在航班查询网站上搜索指定航班的实时动态"),
+        ("搜索这个错误代码", "web_search", "请在技术论坛和文档中搜索该错误代码的解决方案"),
+        ("查一下今天的汇率", "web_search", "请查询今日美元兑人民币的实时汇率"),
+        ("搜个论文", "web_search", "请在学术搜索引擎中检索相关论文"),
+        ("查查这个公司的背景", "web_search", "请在企业信息平台查询该公司的工商注册和经营状况"),
+        ("搜索一下这个产品的评测", "web_search", "请在评测网站搜索该产品的用户评价和专业测评"),
+        # --- data_fetch: quantitative data, financial data, API data pull ---
+        ("拉一下沪深300的行情", "data_fetch", "请从数据源获取沪深300指数的最新行情数据"),
+        ("获取最近的财报数据", "data_fetch", "请从金融数据平台拉取指定公司最近一期的财务报表"),
+        ("下载A股日线数据", "data_fetch", "请从数据接口下载A股指定股票的日线K线数据"),
+        ("查一下北向资金流向", "data_fetch", "请从数据源获取今日北向资金的流入流出数据"),
+        ("拉取基金的净值数据", "data_fetch", "请从基金数据平台获取指定基金的最新净值和历史净值"),
+        ("获取期货的持仓数据", "data_fetch", "请从期货数据源获取指定合约的持仓量变化数据"),
+        ("下载行业指数数据", "data_fetch", "请从数据平台下载指定行业指数的历史行情数据"),
+        ("拉一下经济指标数据", "data_fetch", "请从宏观经济数据库获取CPI、PPI等经济指标数据"),
+        ("查一下龙虎榜数据", "data_fetch", "请从交易数据源获取今日龙虎榜上榜个股和营业部信息"),
+        ("获取融资融券余额", "data_fetch", "请从数据接口拉取两融余额的最新数据"),
+        # --- publish: content distribution, multi-platform posting ---
+        ("发布文章到知乎", "publish", "请将这篇文章发布到知乎平台，需要确认专栏和标签"),
+        ("发到微信公众号", "publish", "请将内容发布到微信公众号，需要确认图文排版和发布时间"),
+        ("发布到X平台", "publish", "请将这条内容发布到X(Twitter)平台"),
+        ("同步发布到所有平台", "publish", "请将文章同时发布到知乎、微信公众号、X等所有配置的平台"),
+        ("发个Substack邮件", "publish", "请将本周刊通过Substack发送给订阅者"),
+        ("发布到小红书", "publish", "请将内容发布到小红书平台，需要确认标题和标签"),
+        ("排期发布下周的文章", "publish", "请为下周的系列文章设置定时发布计划"),
+        ("查看发布状态", "publish", "请查询最近发布内容的审核状态和阅读数据"),
+        ("撤回已发布的内容", "publish", "请撤回指定平台已发布的内容"),
+        ("更新文章并重新发布", "publish", "请修改已发布文章的内容并更新发布"),
+        # --- code_exec: run scripts, execute code, shell commands ---
+        ("跑一下回测脚本", "code_exec", "请执行量化回测脚本并返回回测结果"),
+        ("运行这个Python文件", "code_exec", "请运行指定的Python脚本文件并返回输出"),
+        ("执行一下数据清洗", "code_exec", "请运行数据清洗脚本，处理原始数据并输出清洗后的文件"),
+        ("跑个因子计算", "code_exec", "请执行因子计算脚本，生成指定股票池的因子值"),
+        ("启动训练任务", "code_exec", "请启动模型训练脚本，使用指定配置进行训练"),
+        ("跑一下单元测试", "code_exec", "请执行项目的单元测试并报告测试结果"),
+        ("执行部署脚本", "code_exec", "请运行部署脚本将服务发布到指定环境"),
+        ("运行数据处理管道", "code_exec", "请执行数据处理管道脚本，按步骤完成ETL流程"),
+        ("跑一下模型推理", "code_exec", "请执行模型推理脚本，对输入数据进行预测"),
+        ("执行定时任务", "code_exec", "请运行指定的定时任务脚本并确认执行结果"),
+        # --- api_call: external service calls, webhook triggers ---
+        ("调用天气API", "api_call", "请调用天气查询API获取指定城市的天气预报"),
+        ("发个Webhook通知", "api_call", "请向指定的Webhook地址发送通知消息"),
+        ("调用支付接口", "api_call", "请调用支付平台的API完成指定的支付操作"),
+        ("查一下物流信息", "api_call", "请调用物流查询API获取快递的实时物流轨迹"),
+        ("调一下短信接口", "api_call", "请调用短信服务API发送验证码短信"),
+        ("调用地图API查路线", "api_call", "请调用地图服务API获取从起点到终点的导航路线"),
+        ("请求OAuth授权", "api_call", "请调用OAuth授权接口获取第三方平台的访问令牌"),
+        ("调用翻译API", "api_call", "请调用翻译服务的API接口完成文本翻译"),
+        ("触发CI/CD流水线", "api_call", "请调用CI/CD平台的API触发指定项目的构建部署流水线"),
+        ("调一下数据导出接口", "api_call", "请调用数据平台的导出API下载指定日期范围的数据报表"),
     ],
 }
 
 # Prefix/suffix augmentation
-PREFIXES = ["帮我", "能不能", "我想", "麻烦", "请问", "能不能帮我"]
-SUFFIXES = ["吧", "呢", "啊", "一下", "可以吗", "嘛"]
+# NOTE: Prefixes are ordered from longest to shortest for overlap detection.
+# When checking if a query already has a prefix, we check all shorter variants.
+PREFIXES = ["能不能帮我", "能不能", "帮我", "我想", "麻烦", "请问"]
+SUFFIXES = ["可以吗", "一下", "吧", "呢", "啊", "嘛"]
+
+# Known prefix stems that queries might already start with
+PREFIX_STEMS = ["帮我", "能不能", "我想", "麻烦", "请问"]
+
+
+def _query_has_prefix(query):
+    """Check if query already starts with a known prefix stem."""
+    for stem in PREFIX_STEMS:
+        if query.startswith(stem):
+            return True
+    return False
+
+
+def _query_has_suffix(query, suffix):
+    """Check if query already contains this suffix (for '一下' specifically)."""
+    if suffix == "一下" and "一下" in query:
+        return True
+    if query.endswith(suffix):
+        return True
+    return False
 
 
 def augment_query(query):
-    """Generate variant queries."""
+    """Generate variant queries, avoiding double-prefix and double-suffix."""
     variants = set()
     variants.add(query)
     if len(query) <= 12:
         for p in random.sample(PREFIXES, min(2, len(PREFIXES))):
+            # Skip if query already starts with a known prefix stem
+            if _query_has_prefix(query):
+                continue
             v = p + query
             if len(v) < 25:
                 variants.add(v)
         for s in random.sample(SUFFIXES, min(2, len(SUFFIXES))):
+            # Skip if query already contains this suffix
+            if _query_has_suffix(query, s):
+                continue
             v = query + s
             if len(v) < 25:
                 variants.add(v)
     return variants
+
+
+def stratified_split(augmented, target):
+    """Split data stratified by sub_intent for balanced coverage in all splits.
+
+    Ensures every sub_intent appears in train, eval, and test.
+    """
+    # Group by sub_intent
+    by_sub = defaultdict(list)
+    for query, sub_intent, rewritten in augmented:
+        by_sub[sub_intent].append((query, sub_intent, rewritten))
+
+    train_data = []
+    eval_data = []
+    test_data = []
+
+    for sub_intent, items in by_sub.items():
+        random.shuffle(items)
+        n = len(items)
+        # At least 1 sample in each split if possible
+        if n >= 3:
+            eval_n = max(1, int(n * 0.15))
+            test_n = max(1, int(n * 0.15))
+            train_n = n - eval_n - test_n
+            # Ensure train gets at least 1
+            if train_n < 1:
+                eval_n = max(1, eval_n - 1)
+                train_n = n - eval_n - test_n
+        else:
+            # Very few samples: 1 to train, rest to eval/test if possible
+            train_n = 1
+            eval_n = 1 if n > 1 else 0
+            test_n = n - train_n - eval_n
+
+        train_data.extend(items[:train_n])
+        eval_data.extend(items[train_n:train_n + eval_n])
+        test_data.extend(items[train_n + eval_n:train_n + eval_n + test_n])
+
+    random.shuffle(train_data)
+    random.shuffle(eval_data)
+    random.shuffle(test_data)
+
+    return train_data, eval_data, test_data
 
 
 def build_dataset():
@@ -251,50 +388,55 @@ def build_dataset():
                     augmented.append((variant, sub_intent, rewritten))
                     seen.add(variant)
 
-        # If still not enough, duplicate with more prefixes
+        # If still not enough, duplicate with more prefixes/suffixes
+        # Guard: strip existing prefixes before adding new ones
         base_samples = list(samples)
         idx = 0
         while len(augmented) < 200 and idx < len(base_samples) * 5:
             query, sub_intent, rewritten = base_samples[idx % len(base_samples)]
             p = PREFIXES[idx % len(PREFIXES)]
             s = SUFFIXES[idx % len(SUFFIXES)]
-            variant = p + query + s
+            # Strip existing prefix stems from query before adding new prefix
+            stripped = query
+            for stem in PREFIX_STEMS:
+                if stripped.startswith(stem):
+                    stripped = stripped[len(stem):]
+                    break
+            # Skip if suffix already in query
+            if s == "一下" and "一下" in stripped:
+                idx += 1
+                continue
+            variant = p + stripped + s
             if variant not in seen and len(variant) < 30:
                 augmented.append((variant, sub_intent, rewritten))
                 seen.add(variant)
             idx += 1
 
-        random.shuffle(augmented)
+        # Stratified split by sub_intent
+        train_split, eval_split, test_split = stratified_split(augmented, min(len(augmented), 200))
 
-        # Split
-        target = min(len(augmented), 200 if intent != "tool" else 100)
-        data = augmented[:target]
-        eval_size = int(target * 0.15)
-        test_size = int(target * 0.15)
-        train_size = target - eval_size - test_size
-
-        for query, sub_intent, rewritten in data[:train_size]:
+        for query, sub_intent, rewritten in train_split:
             all_train.append({
                 "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
                 "input": query,
                 "output": json.dumps({"intent": intent, "sub_intent": sub_intent, "rewritten_query": rewritten}, ensure_ascii=False)
             })
 
-        for query, sub_intent, rewritten in data[train_size:train_size + eval_size]:
+        for query, sub_intent, rewritten in eval_split:
             all_eval.append({
                 "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
                 "input": query,
                 "output": json.dumps({"intent": intent, "sub_intent": sub_intent, "rewritten_query": rewritten}, ensure_ascii=False)
             })
 
-        for query, sub_intent, rewritten in data[train_size + eval_size:train_size + eval_size + test_size]:
+        for query, sub_intent, rewritten in test_split:
             all_test.append({
                 "instruction": "分析用户输入的意图，输出意图分类和改写后的查询。",
                 "input": query,
                 "output": json.dumps({"intent": intent, "sub_intent": sub_intent, "rewritten_query": rewritten}, ensure_ascii=False)
             })
 
-        print(f"  {intent}: {train_size} train, {eval_size} eval, {test_size} test (augmented: {len(augmented)})")
+        print(f"  {intent}: {len(train_split)} train, {len(eval_split)} eval, {len(test_split)} test (augmented: {len(augmented)})")
 
     random.shuffle(all_train)
     random.shuffle(all_eval)
@@ -311,14 +453,36 @@ def build_dataset():
     print("\n--- Dataset Stats ---")
     for split_name, split_data in [("train", all_train), ("eval", all_eval), ("test", all_test)]:
         counts = {}
+        sub_counts = {}
         for item in split_data:
             out = json.loads(item["output"])
-            counts[out["intent"]] = counts.get(out["intent"], 0) + 1
+            intent = out["intent"]
+            sub = out["sub_intent"]
+            counts[intent] = counts.get(intent, 0) + 1
+            sub_counts[f"{intent}/{sub}"] = sub_counts.get(f"{intent}/{sub}", 0) + 1
         print(f"{split_name} ({len(split_data)}): {dict(sorted(counts.items()))}")
+        if split_name == "train":
+            for k in sorted(sub_counts.keys()):
+                if k.startswith("tool/"):
+                    print(f"  {k}: {sub_counts[k]}")
+
+    # Verify sub_intent coverage in all splits
+    print("\n--- Sub-intent Coverage Check ---")
+    expected_tool_subs = sorted(set(s[1] for s in SAMPLES["tool"]))
+    for split_name, split_data in [("train", all_train), ("eval", all_eval), ("test", all_test)]:
+        tool_subs = set()
+        for item in split_data:
+            out = json.loads(item["output"])
+            if out["intent"] == "tool":
+                tool_subs.add(out["sub_intent"])
+        missing = set(expected_tool_subs) - tool_subs
+        status = "OK" if not missing else f"MISSING: {sorted(missing)}"
+        print(f"  {split_name}: tool sub_intents={len(tool_subs)}/10 {status}")
 
     # Schema
     schema = {
-        "version": "1.0",
+        "version": "2.0",
+        "changelog": "v2: tool sub_intents expanded from 5 to 10 (added web_search, data_fetch, publish, code_exec, api_call); stratified split by sub_intent; double-prefix/double-suffix guard",
         "coarse_intents": list(SAMPLES.keys()),
         "sub_intents": {k: sorted(set(s[1] for s in v)) for k, v in SAMPLES.items()},
         "output_format": {

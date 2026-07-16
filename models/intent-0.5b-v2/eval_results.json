@@ -1,0 +1,8 @@
+{
+  "coarse_accuracy": 0.8765432098765432,
+  "fine_accuracy": 0.7962962962962963,
+  "parse_rate": 0.9938271604938271,
+  "total_samples": 162,
+  "go_no_go": "No-Go",
+  "device": "MPS (Apple Silicon)"
+}

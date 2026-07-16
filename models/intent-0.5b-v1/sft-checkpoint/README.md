@@ -1,9 +1,9 @@
 ---
-base_model: /Users/zhanglei/yiyan-yixing/model-factory-skills/models/Qwen2.5-0.5B-base
+base_model: /Users/zhanglei/yiyan-yixing/workshop/model-factory-skills/models/Qwen2.5-0.5B-base
 library_name: peft
 pipeline_tag: text-generation
 tags:
-- base_model:adapter:/Users/zhanglei/yiyan-yixing/model-factory-skills/models/Qwen2.5-0.5B-base
+- base_model:adapter:/Users/zhanglei/yiyan-yixing/workshop/model-factory-skills/models/Qwen2.5-0.5B-base
 - lora
 - transformers
 ---
