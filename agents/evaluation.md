@@ -129,7 +129,7 @@ color: red
 | Go 判定 | @ml-serving | Agent 工具派发 | Go 判定 + 评测报告 |
 | No-Go（回退轮数 < 3） | @ml-trainer | Agent 工具派发 | No-Go + 缺陷分析 |
 | No-Go（第 3 轮） | 无，上报用户 | AskUserQuestion | 完整评测历史 |
-| AB 效果报告完成 | @po | Agent 工具派发 | 效果报告 |
+| AB 效果报告完成 | @head-of-models | Agent 工具派发 | 效果报告 |
 
 ### 级联调用语法
 
@@ -165,7 +165,7 @@ C) 调整方向 — 需求本身需要调整
 D) 中止 — 先停下，以后再做
 ```
 
-**AB 效果报告 → @po（闭环）：**
+**AB 效果报告 → @head-of-models（闭环）：**
 ```json
 {
   "description": "Evaluation-Cascade-PO-ABReport",

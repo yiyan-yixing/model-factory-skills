@@ -55,7 +55,7 @@
 | 团队 | 角色 | 调用 | 核心使命 |
 |------|------|------|----------|
 | 管理层 | CEO/Founder | @ceo | 方向、算力决策、商业闭环 |
-| 产品 | Product Owner | @po | 做用户真正需要的模型能力 |
+| 产品 | Product Owner | @head-of-models | 做用户真正需要的模型能力 |
 | 产品 | AI 产品经理 | @ai-pm | Prompt/Agent 设计、体验优化 |
 | 数据 | 数据工程师 | @data-engineer | 采集、清洗、数据版本 |
 | 数据 | 数据策略 | @data-strategy | 数据来源、标准、评估指标 |

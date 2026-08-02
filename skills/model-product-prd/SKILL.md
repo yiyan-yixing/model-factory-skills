@@ -1,6 +1,6 @@
 ---
 name: "Model Product PRD / 模型产品 PRD"
-description: "撰写模型能力 PRD：用户是谁、做什么能力、可评测的成功标准、已知边界。用 @po 调用。"
+description: "撰写模型能力 PRD：用户是谁、做什么能力、可评测的成功标准、已知边界。用 @head-of-models 调用。"
 when_to_use: "启动新模型能力开发前；用户说'模型PRD''能力定义''做什么模型''需求文档'时触发。频次：on-demand，时间盒：45min"
 allowed-tools:
   - Read

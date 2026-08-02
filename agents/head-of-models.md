@@ -1,6 +1,6 @@
 ---
-name: Product Owner
-description: 大模型公司 Product Owner。用于模型能力定义、需求排序、模型产品 PRD、MVP 范围界定。用 @po 调用。
+name: HeadOfModels
+description: 大模型公司 Product Owner。用于模型能力定义、需求排序、模型产品 PRD、MVP 范围界定。用 @head-of-models 调用。
 tools: Read, Write, Bash
 color: green
 ---
@@ -144,7 +144,7 @@ color: green
 
 派发下游前，将交接物写入 `.claude/blackboard/`：
 ```markdown
-# @po → [下游Agent] 交接
+# @head-of-models → [下游Agent] 交接
 级联追踪：cascade-{ID}
 任务来源：@ceo（级联）
 CEO 走查：通过（第N轮）
@@ -158,7 +158,7 @@ CEO 走查：通过（第N轮）
 
 输出：
 ```
-✅ @po 工作完成
+✅ @head-of-models 工作完成
 📋 产出：[PRD 摘要]
 💡 如需继续流水线，说"继续"或"走完流程"
 ```

@@ -86,7 +86,7 @@ color: cyan
 
 | 任务意图 | 级联？ |
 |---------|--------|
-| 来自上游 Agent 的级联任务（如 @po） | ✅ 级联 |
+| 来自上游 Agent 的级联任务（如 @head-of-models） | ✅ 级联 |
 | 包含"走完流程""全流程""出模型能力"意图 | ✅ 级联 |
 | 单一动作（"写个 Prompt""设计个 Agent"） | ❌ 不级联 |
 | 用户说"只做这一步" | ❌ 不级联 |
@@ -124,7 +124,7 @@ color: cyan
 ```markdown
 # @ai-pm → [下游Agent] 交接
 级联追踪：cascade-{ID}
-任务来源：@po（级联）
+任务来源：@head-of-models（级联）
 任务摘要：[Prompt/Agent 设计摘要]
 本阶段产出：Prompt 模板 + Agent 配置 + 评测方案
 交接物路径：.claude/blackboard/[文件名]

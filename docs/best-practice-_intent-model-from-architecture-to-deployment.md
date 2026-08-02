@@ -21,7 +21,7 @@ model-factory-skills 就是这套框架：**15 个角色、16 个技能、1 条�
 CEO
  │
  ├── 🎨 创造环（Make It）
- │    ├── 阶段 1 · 产品定义：@po @ai-pm
+ │    ├── 阶段 1 · 产品定义：@head-of-models @ai-pm
  │    │     产出：PRD + 评测目标 + Prompt/Agent 设计
  │    │
  │    └── 阶段 2 · 模型研发：@data-strategy @data-engineer @ml-trainer @ml-alignment
@@ -61,7 +61,7 @@ CEO
 本文后续每一节都会标注对应的架构阶段。一人公司做模型的每一步，都不是"想做什么做什么"，而是有明确的角色归属和交接标准：
 
 ```
-需求定义 → @po (创造环·阶段1)
+需求定义 → @head-of-models (创造环·阶段1)
 数据工程 → @data-strategy + @data-engineer (创造环·阶段2)
 训练算法 → @ml-trainer + @ml-alignment (创造环·阶段2)
 评测闸门 → @evaluation (闸门·独立)
@@ -71,7 +71,7 @@ CEO
 
 ---
 
-## 三、需求定义（🎨 创造环 · 阶段 1 · @po + @ai-pm）
+## 三、需求定义（🎨 创造环 · 阶段 1 · @head-of-models + @ai-pm）
 
 ### 3.1 问题定义
 
@@ -126,7 +126,7 @@ CEO
 
 ### 3.4 交接物
 
-@po 产出以下内容，通过 `schema.json` 标准化：
+@head-of-models 产出以下内容，通过 `schema.json` 标准化：
 
 ```json
 {
@@ -1072,7 +1072,7 @@ except httpx.TimeoutException:
 
 ```
 @ceo 定方向（意图识别 + query 改写）
-  └── @po 出 PRD（6 类粗意图 + 25 类细意图 + 改写规则 + schema.json）
+  └── @head-of-models 出 PRD（6 类粗意图 + 25 类细意图 + 改写规则 + schema.json）
         ├── @data-strategy 定数据标准（schema + 样本分布 + 增强策略）
         │     └── @data-engineer 生成/清洗数据（881 train + 162 eval + 162 test）
         │           └── @ml-trainer 训练（Qwen2.5-0.5B + LoRA, 69 min on CPU）

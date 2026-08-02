@@ -21,7 +21,7 @@
 | PRD 编号 | PRD-2026-001 |
 | 能力名称 | 中文短文本情感分类 |
 | 模型规模 | ~0.5B 参数（Qwen2.5-0.5B） |
-| PO | @po |
+| PO | @head-of-models |
 | 创建日期 | 2026-07-01 |
 | 状态 | v2-Draft |
 | 时间预算 | 4-6 个工作日 |
@@ -397,7 +397,7 @@ chosen/rejected 示例：
 
 3B 未达标时，按决策树判定差距等级并采取对应行动（差距小→补充数据重训；差距中→诊断瓶颈写分析报告；差距大→重新审视基座选型或流程设计）。
 
-验收由 @evaluation 执行，@po 确认。验收通过后写入 `blackboard/current-sprint.md`。
+验收由 @evaluation 执行，@head-of-models 确认。验收通过后写入 `blackboard/current-sprint.md`。
 
 ---
 
@@ -443,7 +443,7 @@ chosen/rejected 示例：
 本 PRD 完成后的预期级联路径：
 
 ```
-@po 出 PRD
+@head-of-models 出 PRD
   -> @ceo 走查 PRD
     -> 通过 -> @data-strategy 制定数据标准
       -> @data-engineer 采集清洗数据

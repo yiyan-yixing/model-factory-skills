@@ -34,5 +34,5 @@
 | 日期 | 更新内容 | 更新者 |
 |------|----------|--------|
 | 2026-06-17 | 初始化模型工厂 Agent 体系 | @ceo |
-| 2026-07-02 | PRD v2 + CEO 走查通过 + 数据策略完成 + 数据采集完成 | @po + @data-strategy + @data-engineer |
+| 2026-07-02 | PRD v2 + CEO 走查通过 + 数据策略完成 + 数据采集完成 | @head-of-models + @data-strategy + @data-engineer |
 | 2026-07-11 | CEO 战略决策：知识蒸馏路线 + Mac 48G 本地训练 + mlx-lm 框架 | @ceo |

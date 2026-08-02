@@ -75,4 +75,4 @@
 
 - The Stack / StarCoder / CodeLlama / DeepSeek-Coder / Qwen-Coder 数据处理章节
 - 代码去重与质量过滤的公开实践
-- 协议/凭证处理为代码大模型**合规底线**，具体协议白名单须由 @legal 确认
+- 协议/凭证处理为代码大模型**合规底线**，具体协议白名单须由 @clo 确认

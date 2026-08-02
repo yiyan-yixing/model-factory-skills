@@ -59,14 +59,14 @@ my-model-company/
 | 步骤 | 调用 | 做什么 | 产出 | 对应技能 |
 |------|------|--------|------|----------|
 | 1.1 | `@ceo` | 定垂直场景、选基座（自训/微调/API）、算力投入 | 场景定义 + 技术路线 + 算力预算 | `ceo-model-strategy` |
-| 1.2 | `@po` | 写模型能力 PRD：做什么能力、可评测成功标准、边界 | PRD + 数据需求 + 评测目标 | `model-product-prd` |
+| 1.2 | `@head-of-models` | 写模型能力 PRD：做什么能力、可评测成功标准、边界 | PRD + 数据需求 + 评测目标 | `model-product-prd` |
 | 1.3 | CEO 走查 PRD | 质疑方向对不对、基座选对没、评测可量化？ | 通过→继续 / 打回→修改（≤2轮） | — |
 
 **示例对话：**
 
 ```
 @ceo 我们要做法律合同智能审查，选什么基座，算力预算多少
-@po 基于CEO方向，出一份"法律合同条款抽取"的PRD
+@head-of-models 基于CEO方向，出一份"法律合同条款抽取"的PRD
 ```
 
 **CEO 走查要点：**
@@ -348,7 +348,7 @@ my-model-company/
 级联自动执行：
 
 ```
-@ceo → @po 出 PRD → CEO 走查 PRD
+@ceo → @head-of-models 出 PRD → CEO 走查 PRD
   → 通过 → @data-strategy → @data-engineer
     → @ml-trainer → @ml-alignment → @evaluation (Go/No-Go)
       → Go: @ml-serving → @backend → @mlops → @infra → @evaluation(AB)
@@ -366,7 +366,7 @@ my-model-company/
 | 你的需求 | 调用 Agent | 对应技能 | 时间盒 |
 |----------|-----------|---------|--------|
 | 定方向/选基座 | `@ceo` | `ceo-model-strategy` | 30min |
-| 写 PRD | `@po` | `model-product-prd` | 45min |
+| 写 PRD | `@head-of-models` | `model-product-prd` | 45min |
 | 设计 Prompt/Agent | `@ai-pm` | `prompt-agent-design` | 30min |
 | 定数据标准 | `@data-strategy` | `data-strategy-spec` | 30min |
 | 采集清洗数据 | `@data-engineer` | `data-pipeline-build` | 60min |
@@ -390,8 +390,8 @@ my-model-company/
 
 | 产出 | 被质疑者 | 质疑者 | 质疑内容 |
 |------|---------|--------|----------|
-| PRD | @po | @data-strategy | 数据可得性？训练/评测数据从哪来？ |
-| PRD | @po | @evaluation | 评估指标可量化？成功标准能不能测？ |
+| PRD | @head-of-models | @data-strategy | 数据可得性？训练/评测数据从哪来？ |
+| PRD | @head-of-models | @evaluation | 评估指标可量化？成功标准能不能测？ |
 | 数据标准 | @data-strategy | @ml-trainer | 数据量/质量够不够训练？ |
 | 模型 | @ml-trainer | @evaluation | 评测是否充分？ |
 | 模型 | @ml-trainer | @ml-serving | 推理可行性/成本？ |
@@ -413,7 +413,7 @@ my-model-company/
 
 ```
 @evaluation 报告评测 No-Go → @data-strategy 补数据 → @ml-trainer 加训/换方案
-                            → @po 判断是数据问题还是方向问题 → 若方向错 → @ceo 切方向
+                            → @head-of-models 判断是数据问题还是方向问题 → 若方向错 → @ceo 切方向
 不靠"再调调 prompt"硬撑，数据不够就补数据
 ```
 
@@ -431,7 +431,7 @@ my-model-company/
 > 大模型公司铁律：没有可调用的模型能力，就没有对话。
 
 ```
-Day 1-2: @po 定场景 + @data-strategy 定数据来源 + 确认可行性
+Day 1-2: @head-of-models 定场景 + @data-strategy 定数据来源 + 确认可行性
          输入：市场假设 + 算力预算
          输出：1 页 PRD + 数据策略 + 技术方案（自训/微调/基座）
 

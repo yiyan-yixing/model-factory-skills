@@ -30,7 +30,7 @@ claude
 │                                                                  │
 │  ┌───────────┐    ┌──────────────┐    ┌────────────────────────┐ │
 │  │  安装框架  │──→│  初始化公司   │──→│     开工！             │ │
-│  │ install.sh│    │  init.sh     │    │  @po 定模型产品需求    │ │
+│  │ install.sh│    │  init.sh     │    │  @head-of-models 定模型产品需求    │ │
 │  │           │    │              │    │  @data-strategy 定数据 │ │
 │  │ 拿到空壳  │    │  填入模型方向 │    │  @ml-trainer 训练      │ │
 │  │ 15角色    │    │  目标用户     │    │  @evaluation 评测      │ │
@@ -57,7 +57,7 @@ claude
 - **数据**：@data-strategy 定标准 → @data-engineer 采集清洗
 - **模型**：@ml-trainer 训练 → @ml-alignment 对齐 → @evaluation 评测 → @ml-serving 推理优化
 - **服务**：@backend 封装 API → @mlops 流水线 → @infra 部署监控
-- **商业**：@growth 推用户 → @devrel 开发者接入 → @evaluation AB 回滚 → @po 决策迭代
+- **商业**：@growth 推用户 → @devrel 开发者接入 → @evaluation AB 回滚 → @head-of-models 决策迭代
 
 ---
 
@@ -128,7 +128,7 @@ your-project/
            ▼              ▼          ▼          ▼              ▼
       ┌─────────┐   ┌─────────┐ ┌─────────┐ ┌─────────┐  ┌─────────┐
       │ 产品 ×2  │   │ 数据 ×2 │ │ 模型 ×4 │ │ 平台 ×3 │  │ 商业 ×3 │
-      │ @po     │   │@data-eng│ │@ml-train│ │@backend │  │@growth  │
+      │ @head-of-models     │   │@data-eng│ │@ml-train│ │@backend │  │@growth  │
       │ @ai-pm  │   │@data-str│ │@ml-align│ │@infra   │  │@devrel  │
       │         │   │         │ │@ml-serve│ │@mlops   │  │@ops     │
       │         │   │         │ │@eval    │ │         │  │         │
@@ -138,7 +138,7 @@ your-project/
 | 角色 | 调用 | 核心使命 | 可用技能 |
 |------|------|----------|----------|
 | **CEO/Founder** | `@ceo` | 方向、融资、算力资源决策，确保公司活下去 | 模型战略决策 |
-| **Product Owner** | `@po` | 用户是谁、做什么模型能力、什么先上线 | 模型产品 PRD |
+| **Product Owner** | `@head-of-models` | 用户是谁、做什么模型能力、什么先上线 | 模型产品 PRD |
 | **AI 产品经理** | `@ai-pm` | Prompt/Agent 设计、体验优化 | Prompt/Agent 设计 |
 | **数据工程师** | `@data-engineer` | 采集、清洗、ETL、数据版本 | 数据流水线搭建 |
 | **数据策略** | `@data-strategy` | 采什么、怎么标、怎么生、评估指标 | 数据标准与评估 |
@@ -158,10 +158,10 @@ your-project/
 ### 闭环流程（详见 `agents/WORKFLOW.md`）
 
 ```
-@po 定需求 → @data-strategy 定标准 → @data-engineer 采数据
+@head-of-models 定需求 → @data-strategy 定标准 → @data-engineer 采数据
   → @ml-trainer 训练 → @ml-alignment 对齐 → @evaluation 评测
     → @ml-serving 推理优化 → @backend 出 API → @mlops 流水线 → @infra 部署
-      → @growth 推用户 + @devrel 接入 → @evaluation AB 回滚 → @po 决策迭代
+      → @growth 推用户 + @devrel 接入 → @evaluation AB 回滚 → @head-of-models 决策迭代
                                                                     ↓
                           @ceo 战略校准 ← @evaluation 效果报告 ←─────┘
 ```
@@ -198,7 +198,7 @@ your-project/
 > 大模型公司铁律：没有可调用的模型能力，就没有对话。
 
 ```
-Day 1-2: @po 定场景 + @data-strategy 定数据来源 + @architect(若复用基座) 确认可行性
+Day 1-2: @head-of-models 定场景 + @data-strategy 定数据来源 + @architect(若复用基座) 确认可行性
          输出：模型能力 PRD + 数据策略 + 技术方案
 
 Day 3-4: @ml-trainer 训练/微调 + @ml-alignment 对齐 + @evaluation 跑评测
@@ -231,7 +231,7 @@ Day 6-7: @devrel 出文档/示例 + @growth 推 10 个种子用户 + @data 开�
 
 ```
 @ceo 我们要不要自训基座还是用开源
-@po 这个模型能力该做成 API 还是 Playground
+@head-of-models 这个模型能力该做成 API 还是 Playground
 @data-strategy 训练数据从哪来，怎么标注
 @ml-trainer 设计一个预训练实验方案
 @evaluation 给这个模型版本出评测报告
@@ -274,14 +274,14 @@ Day 6-7: @devrel 出文档/示例 + @growth 推 10 个种子用户 + @data 开�
 
 | 文件 | 用途 | 维护者 |
 |------|------|--------|
-| `.claude/blackboard/current-sprint.md` | 当前迭代目标、任务分配、进度 | @po |
+| `.claude/blackboard/current-sprint.md` | 当前迭代目标、任务分配、进度 | @head-of-models |
 | `.claude/blackboard/open-questions.md` | 待解决问题 | 任何 Agent |
 | `.claude/blackboard/challenges.md` | 质疑记录 | 协调者 |
 | `.claude/blackboard/decisions-log.md` | 决策日志索引 | @ceo |
 
 ## 质疑协议
 
-- @po 出 PRD → @data-strategy 质疑「数据可得性」+ @evaluation 质疑「评估指标可量化」
+- @head-of-models 出 PRD → @data-strategy 质疑「数据可得性」+ @evaluation 质疑「评估指标可量化」
 - @ml-trainer 出模型 → @evaluation 质疑「评测是否充分」+ @ml-serving 质疑「推理可行性/成本」
 - @ceo 做重大决策 → @evaluation 质疑「数据与评测支撑」
 

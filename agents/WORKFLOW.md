@@ -14,7 +14,7 @@
 CEO
  │
  ├── 🎨 创造环（Make It）
- │    ├── 阶段 1 · 产品定义：@po @ai-pm
+ │    ├── 阶段 1 · 产品定义：@head-of-models @ai-pm
  │    │     产出：PRD + 评测目标 + Prompt/Agent 设计
  │    │
  │    └── 阶段 2 · 模型研发：@data-strategy @data-engineer @ml-trainer @ml-alignment
@@ -61,12 +61,12 @@ CEO
 ```
 @ceo 定方向 + 选基座
   │
-  └── @po 定义模型产品需求
+  └── @head-of-models 定义模型产品需求
         │
         ├── ⚡ CEO 走查 PRD ← 反馈闭环①（≤2轮）
         │     │
-        │     ├── 通过 → @po 继续派发下游
-        │     └── 打回 → @po 修改 PRD
+        │     ├── 通过 → @head-of-models 继续派发下游
+        │     └── 打回 → @head-of-models 修改 PRD
         │           └── 2轮打回 → 上报 CEO
         │
         ├── @ai-pm 设计 Prompt / Agent 交互
@@ -86,16 +86,16 @@ CEO
                                                   │
                                                   └── @growth 推用户 + @devrel 开发者接入
                                                         └── @evaluation AB 测试 + 灰度回滚
-                                                              └── @po 决策迭代
+                                                              └── @head-of-models 决策迭代
                                                                     ├── 继续 → 下一迭代
                                                                     ├── 调整 → 改进后下一迭代
-                                                                    └── 砍掉 → @ceo 切方向 → 回到 @po 重新定义
+                                                                    └── 砍掉 → @ceo 切方向 → 回到 @head-of-models 重新定义
 ```
 
 ### 质疑节点（按 challenge-protocol.md）
 
 ```
-@po 出 PRD ──→ @data-strategy 质疑数据可得性 ──→ 通过/修改/打回
+@head-of-models 出 PRD ──→ @data-strategy 质疑数据可得性 ──→ 通过/修改/打回
             ──→ @evaluation 质疑评估指标可量化 ──→ 通过/修改/打回
 
 @data-strategy 出数据标准 ──→ @ml-trainer 质疑数据量/质量够不够训练 ──→ 通过/修改/打回
@@ -114,7 +114,7 @@ CEO
 
 | 角色 | 调用 | 阶段 | 做什么 | 不做什么 |
 |------|------|------|--------|----------|
-| **PO** | `@po` | 产品定义 | 定模型能力、排优先级、写 PRD | 不自己当标注员/用户 |
+| **PO** | `@head-of-models` | 产品定义 | 定模型能力、排优先级、写 PRD | 不自己当标注员/用户 |
 | **AI PM** | `@ai-pm` | 产品定义 | Prompt/Agent 设计、体验优化 | 不追求完美 prompt 拖慢上线 |
 | **数据策略** | `@data-strategy` | 模型研发 | 定数据来源、标注规范、评估指标 | 不堆数据不清洗就喂模型 |
 | **数据工程师** | `@data-engineer` | 模型研发 | 采集、清洗、ETL、数据版本 | 不拍脑袋定数据标准 |
@@ -158,7 +158,7 @@ CEO
 
 ```
 Day 1-2: 🎨 创造环·产品定义 + 数据策略
-         @po 定场景 + @data-strategy 定数据来源 + 确认可行性
+         @head-of-models 定场景 + @data-strategy 定数据来源 + 确认可行性
          输入：市场假设 + 算力预算
          输出：1 页 PRD + 数据策略 + 技术方案（自训/微调/基座）
 
@@ -209,7 +209,7 @@ Day 6-7: 🚀 推广环·商业闭环
 周一（20min）         周三（10min）         周五（30min）
 ┌──────────┐        ┌──────────┐        ┌──────────────┐
 │ 规划本期  │──────→│ 中期检查  │──────→│ 评测+复盘    │
-│ @po 主导  │       │ @po 主导  │       │@eval+@po 主导│
+│ @head-of-models 主导  │       │ @head-of-models 主导  │       │@eval+@head-of-models 主导│
 │ @data-str│       │ @ml 反馈  │       │ @ceo 校准    │
 │ @ml 可行  │       │          │       │              │
 └──────────┘        └──────────┘        └──────────────┘
@@ -217,7 +217,7 @@ Day 6-7: 🚀 推广环·商业闭环
 
 ### 周一规划
 
-- @po 从 OKR 提取本期模型能力目标
+- @head-of-models 从 OKR 提取本期模型能力目标
 - @data-strategy 确认数据就绪
 - @ml-trainer + @ml-alignment 确认训练可行性 + 算力预算
 - @mlops 确认流水线通道畅通
@@ -226,14 +226,14 @@ Day 6-7: 🚀 推广环·商业闭环
 
 ### 周三检查
 
-- @po 检查训练/评测进度
+- @head-of-models 检查训练/评测进度
 - @ml-* 反馈训练障碍（数据不够/算力不足/效果卡住）
 - 偏航 → 当天调整，不等到周五
 
 ### 周五复盘
 
 - @evaluation 出模型效果报告（评测分数 + AB 数据）
-- @po 判断模型能力假设是否成立
+- @head-of-models 判断模型能力假设是否成立
 - @ml-* 评估技术债
 - @ceo 做战略校准（如需要）
 - 定下期方向
@@ -268,7 +268,7 @@ Day 6-7: 🚀 推广环·商业闭环
 | Agent | 归属 | 可写 | 可读 |
 |-------|------|------|------|
 | @ceo | 战略层 | blackboard/decisions-log.md, blackboard/open-questions.md | 所有 |
-| @po | 🎨 创造环·产品定义 | blackboard/current-sprint.md | 所有 |
+| @head-of-models | 🎨 创造环·产品定义 | blackboard/current-sprint.md | 所有 |
 | @ai-pm | 🎨 创造环·产品定义 | blackboard/ | 所有 |
 | @data-strategy | 🎨 创造环·模型研发 | memory/core/project-context.md（数据部分）, blackboard/ | 所有 |
 | @data-engineer | 🎨 创造环·模型研发 | — | memory/core/, archival/ |
@@ -287,19 +287,19 @@ Day 6-7: 🚀 推广环·商业闭环
 
 ## 级联协议（Cascade Protocol）
 
-Agent 完成核心工作后，自动检测下游是否存在，自动派发下游 Agent。用户只需和入口角色（@ceo / @po）沟通，整条链自动走完。
+Agent 完成核心工作后，自动检测下游是否存在，自动派发下游 Agent。用户只需和入口角色（@ceo / @head-of-models）沟通，整条链自动走完。
 
 ### 级联路由表
 
 | 当前 Agent | 完成条件 | 下游 Agent | 交接物 | 条件 |
 |-----------|---------|-----------|--------|------|
-| @ceo | 方向已定 | @po | 方向决策 + 基座策略 | 交付型任务 |
-| @po | PRD+评测目标写入 blackboard | @ceo | PRD 路径 | 级联交付型，CEO 走查 PRD |
-| @ceo | PRD 走查通过 | @po（继续级联） | 走查通过 | PO 继续派发下游 |
-| @ceo | PRD 走查打回 | @po | 打回原因+修改要求 | 修改后重新走查（≤2轮） |
-| @po | CEO 走查通过 | @data-strategy | PRD+评测目标 | 涉及新模型能力/新数据源 |
-| @po | CEO 走查通过 | @ai-pm | PRD+评测目标 | 涉及 Prompt/Agent 交互 |
-| @po | CEO 走查通过 | @ml-trainer | PRD+评测目标 | 微调/对齐类（不需新数据） |
+| @ceo | 方向已定 | @head-of-models | 方向决策 + 基座策略 | 交付型任务 |
+| @head-of-models | PRD+评测目标写入 blackboard | @ceo | PRD 路径 | 级联交付型，CEO 走查 PRD |
+| @ceo | PRD 走查通过 | @head-of-models（继续级联） | 走查通过 | PO 继续派发下游 |
+| @ceo | PRD 走查打回 | @head-of-models | 打回原因+修改要求 | 修改后重新走查（≤2轮） |
+| @head-of-models | CEO 走查通过 | @data-strategy | PRD+评测目标 | 涉及新模型能力/新数据源 |
+| @head-of-models | CEO 走查通过 | @ai-pm | PRD+评测目标 | 涉及 Prompt/Agent 交互 |
+| @head-of-models | CEO 走查通过 | @ml-trainer | PRD+评测目标 | 微调/对齐类（不需新数据） |
 | @data-strategy | 数据标准+指标写入 blackboard | @data-engineer | 数据规范+来源清单 | 数据策略确认 |
 | @data-engineer | 清洗数据集写入 blackboard | @ml-trainer | 清洗后数据集+版本 | 数据通过质量校验 |
 | @ml-trainer | 预训练/基座模型写入 blackboard | @ml-alignment | 模型+训练日志 | 模型能跑通基础能力 |
@@ -311,7 +311,7 @@ Agent 完成核心工作后，自动检测下游是否存在，自动派发下�
 | @mlops | 流水线自动化完成 | @infra | CI/CD 配置+监控 | Infra 确认通道畅通 |
 | @infra | 部署完成 | @growth | 在线 URL+监控 | 服务可用率达标 |
 | @growth | 用户数据开始流入 | @evaluation | 调用量+用户反馈 | AB 实验数据 |
-| @evaluation | AB 效果报告完成 | @po | 效果报告 | 有"所以呢"结论 → 回到创造环 |
+| @evaluation | AB 效果报告完成 | @head-of-models | 效果报告 | 有"所以呢"结论 → 回到创造环 |
 
 ### 级联触发判断
 
@@ -325,12 +325,12 @@ Agent 完成核心工作后，自动检测下游是否存在，自动派发下�
 ### 级联-闭环交互
 
 ```
-交付型任务 → @ceo → @po 出 PRD → CEO 走查 PRD ──→ 通过 → @data-strategy/@ai-pm/@ml-trainer
+交付型任务 → @ceo → @head-of-models 出 PRD → CEO 走查 PRD ──→ 通过 → @data-strategy/@ai-pm/@ml-trainer
                                          │
-                                         └── 打回 → @po 修改
+                                         └── 打回 → @head-of-models 修改
                                                └── 2轮打回 → 上报 CEO
 
-@ml-trainer → @ml-alignment → 🚦 @evaluation ──→ Go → @ml-serving → @backend → @mlops → @infra → @growth → @evaluation(AB) → @po
+@ml-trainer → @ml-alignment → 🚦 @evaluation ──→ Go → @ml-serving → @backend → @mlops → @infra → @growth → @evaluation(AB) → @head-of-models
                                            └── No-Go → @ml-trainer（≤2轮）
 ```
 
@@ -360,7 +360,7 @@ Agent 完成核心工作后，自动检测下游是否存在，自动派发下�
 
 | 闭环 | 触发 | 走查者 | 被走查者 | 走查内容 | 最大轮数 |
 |------|------|--------|----------|----------|----------|
-| ① PRD 走查 | PO 出 PRD | @ceo | @po | 方向对不对？基座选对没？评测标准可量化？ | 2 |
+| ① PRD 走查 | PO 出 PRD | @ceo | @head-of-models | 方向对不对？基座选对没？评测标准可量化？ | 2 |
 | ② 评测闸门 | ML 出模型 | @evaluation | @ml-trainer/@ml-alignment | Go/No-Go（已有） | 2（已有） |
 
 ### 走查记录格式
@@ -397,7 +397,7 @@ Agent 完成核心工作后，自动检测下游是否存在，自动派发下�
 | 结果 | 动作 |
 |------|------|
 | 通过 | 写走查记录，PO 继续级联下游 |
-| 打回（轮次 < 2） | 写走查记录 + 修改要求，@po 修改后重新走查 |
+| 打回（轮次 < 2） | 写走查记录 + 修改要求，@head-of-models 修改后重新走查 |
 | 打回（第 2 轮） | BLOCKED，上报用户 |
 
 ### 终端报告格式
@@ -433,7 +433,7 @@ Agent 完成核心工作后，自动检测下游是否存在，自动派发下�
 
 ```
 @evaluation 报告评测 No-Go → @data-strategy 补数据 → @ml-trainer 加训/换方案
-                            → @po 判断是数据问题还是方向问题 → 若方向错 → @ceo 切方向
+                            → @head-of-models 判断是数据问题还是方向问题 → 若方向错 → @ceo 切方向
 不靠"再调调 prompt"硬撑，数据不够就补数据
 ```
 
@@ -482,7 +482,7 @@ Agent 完成核心工作后，自动检测下游是否存在，自动派发下�
 
 ```
 @evaluation 报告评测 No-Go → @data-strategy 补数据 → @ml-trainer 加训/换方案
-                            → @po 判断是数据问题还是方向问题 → 若方向错 → @ceo 切方向
+                            → @head-of-models 判断是数据问题还是方向问题 → 若方向错 → @ceo 切方向
 不靠"再调调 prompt"硬撑，数据不够就补数据
 ```
 

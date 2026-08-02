@@ -17,7 +17,7 @@ version: "1.0.0"
 ## 准备
 
 - **基座模型**：@ml-trainer 的 checkpoint
-- **能力目标**：@po 的 PRD（要会什么）
+- **能力目标**：@head-of-models 的 PRD（要会什么）
 - **安全要求**：哪些必须拒答、哪些边界
 
 ## 执行步骤

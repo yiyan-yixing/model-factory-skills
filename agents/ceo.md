@@ -99,7 +99,7 @@ color: blue
 
 | 你完成后的状态 | 下游 Agent | 交接方式 | 交接物 |
 |---------------|-----------|---------|--------|
-| 方向已定 | @po | Agent 工具派发 | 方向决策 + 基座策略 |
+| 方向已定 | @head-of-models | Agent 工具派发 | 方向决策 + 基座策略 |
 
 ### PRD 走查规则
 
@@ -130,7 +130,7 @@ PO 完成 PRD 后，你自动走查 PRD。这是反馈闭环①——方向错 =
 
 ### 级联调用语法
 
-**→ @po（方向已定）：**
+**→ @head-of-models（方向已定）：**
 ```json
 {
   "description": "CEO-Cascade-PO",
@@ -143,7 +143,7 @@ PO 完成 PRD 后，你自动走查 PRD。这是反馈闭环①——方向错 =
 
 派发下游前，将交接物写入 `.claude/blackboard/`：
 ```markdown
-# @ceo → @po 交接
+# @ceo → @head-of-models 交接
 级联追踪：cascade-{ID}
 任务来源：用户
 任务摘要：[方向摘要]
