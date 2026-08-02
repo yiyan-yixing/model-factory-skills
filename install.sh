@@ -138,5 +138,5 @@ if [ -z "$SKIP_INIT" ] && [ -f ".claude/init.sh" ]; then
 else
   echo "下一步："
   echo "  1. 运行 bash .claude/init.sh 初始化你的模型公司信息"
-  echo "  2. 启动 Claude Code，输入 @ceo 定垂直场景和模型路线"
+  echo "  2. 启动 Claude Code，输入 @model-ceo 定垂直场景和模型路线"
 fi

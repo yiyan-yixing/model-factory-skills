@@ -444,7 +444,7 @@ chosen/rejected 示例：
 
 ```
 @head-of-models 出 PRD
-  -> @ceo 走查 PRD
+  -> @model-ceo 走查 PRD
     -> 通过 -> @data-strategy 制定数据标准
       -> @data-engineer 采集清洗数据
         -> @ml-trainer 基座微调

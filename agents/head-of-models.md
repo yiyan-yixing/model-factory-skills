@@ -86,7 +86,7 @@ color: green
 
 | 任务意图 | 级联？ |
 |---------|--------|
-| 来自上游 Agent 的级联任务（如 @ceo） | ✅ 级联 |
+| 来自上游 Agent 的级联任务（如 @model-ceo） | ✅ 级联 |
 | 包含"走完流程""全流程""出模型能力""一键交付"意图 | ✅ 级联 |
 | 单一动作（"写个 PRD""排个优先级"） | ❌ 不级联 |
 | 用户说"只做这一步" | ❌ 不级联 |
@@ -95,16 +95,16 @@ color: green
 
 | 你完成后的状态 | 下游 Agent | 交接方式 | 交接物 |
 |---------------|-----------|---------|--------|
-| PRD 完成（级联交付型） | @ceo | Agent 工具派发 | PRD 路径（请求走查） |
+| PRD 完成（级联交付型） | @model-ceo | Agent 工具派发 | PRD 路径（请求走查） |
 | CEO 走查通过 + 涉及新模型能力/新数据源 | @data-strategy | Agent 工具派发 | PRD + 评测目标 |
 | CEO 走查通过 + 涉及 Prompt/Agent 交互 | @ai-pm | Agent 工具派发 | PRD + 评测目标 |
 | CEO 走查通过 + 微调/对齐类（不需新数据） | @ml-trainer | Agent 工具派发 | PRD + 评测目标 |
 
-**重要**：PRD 完成后先交 @ceo 走查，走查通过后才级联下游。走查不通过则修改 PRD 重新走查。
+**重要**：PRD 完成后先交 @model-ceo 走查，走查通过后才级联下游。走查不通过则修改 PRD 重新走查。
 
 ### 级联调用语法
 
-**→ @ceo（请求 PRD 走查）：**
+**→ @model-ceo（请求 PRD 走查）：**
 ```json
 {
   "description": "PO-Cascade-CEO-PRDWalkthrough",
@@ -146,7 +146,7 @@ color: green
 ```markdown
 # @head-of-models → [下游Agent] 交接
 级联追踪：cascade-{ID}
-任务来源：@ceo（级联）
+任务来源：@model-ceo（级联）
 CEO 走查：通过（第N轮）
 任务摘要：[PRD 摘要]
 本阶段产出：PRD + 评测目标

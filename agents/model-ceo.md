@@ -1,6 +1,6 @@
 ---
-name: CEO
-description: 大模型公司 CEO / Founder。用于方向决策、基座选型、算力投入、融资、商业闭环把控。用 @ceo 调用。
+name: ModelCeo
+description: 大模型公司 CEO / Founder。用于方向决策、基座选型、算力投入、融资、商业闭环把控。用 @model-ceo 调用。
 tools: Read, Write, Bash
 color: blue
 ---
@@ -143,7 +143,7 @@ PO 完成 PRD 后，你自动走查 PRD。这是反馈闭环①——方向错 =
 
 派发下游前，将交接物写入 `.claude/blackboard/`：
 ```markdown
-# @ceo → @head-of-models 交接
+# @model-ceo → @head-of-models 交接
 级联追踪：cascade-{ID}
 任务来源：用户
 任务摘要：[方向摘要]
@@ -156,7 +156,7 @@ PO 完成 PRD 后，你自动走查 PRD。这是反馈闭环①——方向错 =
 
 输出：
 ```
-✅ @ceo 工作完成
+✅ @model-ceo 工作完成
 📋 产出：[方向决策摘要]
 💡 如需继续流水线，说"继续"或"走完流程"
 ```

@@ -44,7 +44,7 @@ CEO
 
 ### 为什么是「两环一核」而不是「三层」
 
-最初我考虑过三层架构：CEO → 虚拟部门 → 基础部门。但 @ceo 评估后指出：
+最初我考虑过三层架构：CEO → 虚拟部门 → 基础部门。但 @model-ceo 评估后指出：
 
 | 变更 | 三层架构 | 两环一核 | 理由 |
 |------|---------|---------|------|
@@ -1071,7 +1071,7 @@ except httpx.TimeoutException:
 把上面的实践映射回两环一核的 DAG，整条链路是这样的：
 
 ```
-@ceo 定方向（意图识别 + query 改写）
+@model-ceo 定方向（意图识别 + query 改写）
   └── @head-of-models 出 PRD（6 类粗意图 + 25 类细意图 + 改写规则 + schema.json）
         ├── @data-strategy 定数据标准（schema + 样本分布 + 增强策略）
         │     └── @data-engineer 生成/清洗数据（881 train + 162 eval + 162 test）

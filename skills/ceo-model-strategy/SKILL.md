@@ -1,6 +1,6 @@
 ---
-name: "CEO Model Strategy / CEO 模型战略与资源决策"
-description: "定垂直场景、选基座策略、算力投入、商业模式判断。用 @ceo 调用。"
+name: "ceo-model-strategy"
+description: "定垂直场景、选基座策略、算力投入、商业模式判断。用 @model-ceo 调用。"
 when_to_use: "需要定模型方向、选自训/微调/API、算力投入、商业模式时；用户说'模型战略''选基座''要不要自训''算力投入''商业模式'时触发。频次：on-demand，时间盒：30min"
 allowed-tools:
   - Read

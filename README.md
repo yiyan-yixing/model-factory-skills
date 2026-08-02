@@ -14,7 +14,7 @@ bash /workspace/model-factory-skills/install.sh
 
 # 3. 启动 Claude Code，你的大模型公司已就绪
 claude
-@ceo 帮我定垂直场景和模型路线
+@model-ceo 帮我定垂直场景和模型路线
 @data-strategy 我们的数据从哪来
 ```
 
@@ -137,7 +137,7 @@ your-project/
 
 | 角色 | 调用 | 核心使命 | 可用技能 |
 |------|------|----------|----------|
-| **CEO/Founder** | `@ceo` | 方向、融资、算力资源决策，确保公司活下去 | 模型战略决策 |
+| **CEO/Founder** | `@model-ceo` | 方向、融资、算力资源决策，确保公司活下去 | 模型战略决策 |
 | **Product Owner** | `@head-of-models` | 用户是谁、做什么模型能力、什么先上线 | 模型产品 PRD |
 | **AI 产品经理** | `@ai-pm` | Prompt/Agent 设计、体验优化 | Prompt/Agent 设计 |
 | **数据工程师** | `@data-engineer` | 采集、清洗、ETL、数据版本 | 数据流水线搭建 |
@@ -153,7 +153,7 @@ your-project/
 | **DevRel** | `@devrel` | 文档、SDK、社区、开发者生态 | 开发者文档/SDK |
 | **运营** | `@growth` | 内容、用户运营 | 内容运营日历 |
 
-> **COO**（组织架构里 CEO 可兼任）职责并入 @ceo，不单列 Agent。
+> **COO**（组织架构里 CEO 可兼任）职责并入 @model-ceo，不单列 Agent。
 
 ### 闭环流程（详见 `agents/WORKFLOW.md`）
 
@@ -163,7 +163,7 @@ your-project/
     → @ml-serving 推理优化 → @backend 出 API → @mlops 流水线 → @infra 部署
       → @growth 推用户 + @devrel 接入 → @evaluation AB 回滚 → @head-of-models 决策迭代
                                                                     ↓
-                          @ceo 战略校准 ← @evaluation 效果报告 ←─────┘
+                          @model-ceo 战略校准 ← @evaluation 效果报告 ←─────┘
 ```
 
 ---
@@ -230,7 +230,7 @@ Day 6-7: @devrel 出文档/示例 + @growth 推 10 个种子用户 + @data 开�
 通过 `@角色名` 调用，以该角色的视角、权限和 KPI 执行：
 
 ```
-@ceo 我们要不要自训基座还是用开源
+@model-ceo 我们要不要自训基座还是用开源
 @head-of-models 这个模型能力该做成 API 还是 Playground
 @data-strategy 训练数据从哪来，怎么标注
 @ml-trainer 设计一个预训练实验方案
@@ -277,13 +277,13 @@ Day 6-7: @devrel 出文档/示例 + @growth 推 10 个种子用户 + @data 开�
 | `.claude/blackboard/current-sprint.md` | 当前迭代目标、任务分配、进度 | @head-of-models |
 | `.claude/blackboard/open-questions.md` | 待解决问题 | 任何 Agent |
 | `.claude/blackboard/challenges.md` | 质疑记录 | 协调者 |
-| `.claude/blackboard/decisions-log.md` | 决策日志索引 | @ceo |
+| `.claude/blackboard/decisions-log.md` | 决策日志索引 | @model-ceo |
 
 ## 质疑协议
 
 - @head-of-models 出 PRD → @data-strategy 质疑「数据可得性」+ @evaluation 质疑「评估指标可量化」
 - @ml-trainer 出模型 → @evaluation 质疑「评测是否充分」+ @ml-serving 质疑「推理可行性/成本」
-- @ceo 做重大决策 → @evaluation 质疑「数据与评测支撑」
+- @model-ceo 做重大决策 → @evaluation 质疑「数据与评测支撑」
 
 详见 `agents/challenge-protocol.md`。
 

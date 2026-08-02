@@ -123,7 +123,7 @@ cat > "${CLAUDE_DIR}/memory/core/project-context.md" << EOF
 
 | 团队 | 角色 | 调用 | 核心使命 |
 |------|------|------|----------|
-| 管理层 | CEO/Founder | @ceo | 方向、算力决策、商业闭环 |
+| 管理层 | CEO/Founder | @model-ceo | 方向、算力决策、商业闭环 |
 | 产品 | Product Owner | @head-of-models | 做用户真正需要的模型能力 |
 | 产品 | AI 产品经理 | @ai-pm | Prompt/Agent 设计、体验优化 |
 | 数据 | 数据工程师 | @data-engineer | 采集、清洗、数据版本 |
@@ -284,7 +284,7 @@ cat > "${CLAUDE_DIR}/blackboard/current-sprint.md" << 'EOF'
 
 | 日期 | 更新内容 | 更新者 |
 |------|----------|--------|
-| — | 初始化 | @ceo |
+| — | 初始化 | @model-ceo |
 EOF
 
 cat > "${CLAUDE_DIR}/blackboard/open-questions.md" << 'EOF'
@@ -395,7 +395,7 @@ echo "  👤 用户: ${TARGET_USER}"
 echo ""
 echo "下一步："
 echo "  1. 启动 Claude Code"
-echo "  2. 输入 @ceo 定垂直场景和模型路线"
+echo "  2. 输入 @model-ceo 定垂直场景和模型路线"
 echo "  3. 输入 @head-of-models 定义第一个模型能力需求"
 echo "  4. 输入 @data-strategy 规划数据来源"
 echo ""

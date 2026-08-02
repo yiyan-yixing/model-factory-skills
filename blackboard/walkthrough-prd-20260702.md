@@ -1,7 +1,7 @@
 # 走查记录 walkthrough-prd-20260702
 
 走查类型：PRD 走查
-走查者：@ceo
+走查者：@model-ceo
 被走查者：@head-of-models
 轮次：1
 
@@ -110,7 +110,7 @@ D2 决策是"评测先行"，评测的核心价值不在数字本身，而在**�
 # 第 2 轮走查
 
 走查类型：PRD 走查
-走查者：@ceo
+走查者：@model-ceo
 被走查者：@head-of-models
 轮次：2
 

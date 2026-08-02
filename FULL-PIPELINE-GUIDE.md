@@ -58,14 +58,14 @@ my-model-company/
 
 | 步骤 | 调用 | 做什么 | 产出 | 对应技能 |
 |------|------|--------|------|----------|
-| 1.1 | `@ceo` | 定垂直场景、选基座（自训/微调/API）、算力投入 | 场景定义 + 技术路线 + 算力预算 | `ceo-model-strategy` |
+| 1.1 | `@model-ceo` | 定垂直场景、选基座（自训/微调/API）、算力投入 | 场景定义 + 技术路线 + 算力预算 | `ceo-model-strategy` |
 | 1.2 | `@head-of-models` | 写模型能力 PRD：做什么能力、可评测成功标准、边界 | PRD + 数据需求 + 评测目标 | `model-product-prd` |
 | 1.3 | CEO 走查 PRD | 质疑方向对不对、基座选对没、评测可量化？ | 通过→继续 / 打回→修改（≤2轮） | — |
 
 **示例对话：**
 
 ```
-@ceo 我们要做法律合同智能审查，选什么基座，算力预算多少
+@model-ceo 我们要做法律合同智能审查，选什么基座，算力预算多少
 @head-of-models 基于CEO方向，出一份"法律合同条款抽取"的PRD
 ```
 
@@ -322,7 +322,7 @@ my-model-company/
                                               ┌──────────┤
                                               ▼          ▼
                                            切方向      补数据/换方案
-                                           (@ceo)     (@data-strategy/@ml-trainer)
+                                           (@model-ceo)     (@data-strategy/@ml-trainer)
 
 线上 AB 护栏恶化 ─→ 立即回滚 ─→ 定位根因 ─→ 修复/重训 ─→ 重新灰度 ─→ 直到通过
 ```
@@ -331,7 +331,7 @@ my-model-company/
 
 | 节点 | 触发条件 | 谁确认 | 为什么 |
 |------|---------|--------|--------|
-| CEO PRD 走查 | PO 出 PRD 后 | @ceo | 方向错 = 全白干 |
+| CEO PRD 走查 | PO 出 PRD 后 | @model-ceo | 方向错 = 全白干 |
 | 评测 No-Go 第 3 轮 | ML 连续 3 轮不达标 | 用户 | 需判断是数据/方案/方向问题 |
 | 风控红线 | 涉及安全/合规 | 用户 | 模型安全不可自动放行 |
 
@@ -342,13 +342,13 @@ my-model-company/
 如果你不想逐步手动调用，模型工厂支持 **级联协议**——只需要和入口角色说"走完流程"，Agent 会自动沿 DAG 往下走：
 
 ```
-@ceo 我要做法律合同智能审查，走完流程到上线
+@model-ceo 我要做法律合同智能审查，走完流程到上线
 ```
 
 级联自动执行：
 
 ```
-@ceo → @head-of-models 出 PRD → CEO 走查 PRD
+@model-ceo → @head-of-models 出 PRD → CEO 走查 PRD
   → 通过 → @data-strategy → @data-engineer
     → @ml-trainer → @ml-alignment → @evaluation (Go/No-Go)
       → Go: @ml-serving → @backend → @mlops → @infra → @evaluation(AB)
@@ -365,7 +365,7 @@ my-model-company/
 
 | 你的需求 | 调用 Agent | 对应技能 | 时间盒 |
 |----------|-----------|---------|--------|
-| 定方向/选基座 | `@ceo` | `ceo-model-strategy` | 30min |
+| 定方向/选基座 | `@model-ceo` | `ceo-model-strategy` | 30min |
 | 写 PRD | `@head-of-models` | `model-product-prd` | 45min |
 | 设计 Prompt/Agent | `@ai-pm` | `prompt-agent-design` | 30min |
 | 定数据标准 | `@data-strategy` | `data-strategy-spec` | 30min |
@@ -395,7 +395,7 @@ my-model-company/
 | 数据标准 | @data-strategy | @ml-trainer | 数据量/质量够不够训练？ |
 | 模型 | @ml-trainer | @evaluation | 评测是否充分？ |
 | 模型 | @ml-trainer | @ml-serving | 推理可行性/成本？ |
-| 重大决策 | @ceo | @evaluation | 有没有数据和评测支撑？ |
+| 重大决策 | @model-ceo | @evaluation | 有没有数据和评测支撑？ |
 
 ---
 
@@ -413,14 +413,14 @@ my-model-company/
 
 ```
 @evaluation 报告评测 No-Go → @data-strategy 补数据 → @ml-trainer 加训/换方案
-                            → @head-of-models 判断是数据问题还是方向问题 → 若方向错 → @ceo 切方向
+                            → @head-of-models 判断是数据问题还是方向问题 → 若方向错 → @model-ceo 切方向
 不靠"再调调 prompt"硬撑，数据不够就补数据
 ```
 
 ### 能力机会窗口（外部出现新基座/新范式）
 
 ```
-外部出现更强基座 → @ceo 判断是否值得切 → @ml-trainer 评估迁移成本 → @evaluation 评估效果增益
+外部出现更强基座 → @model-ceo 判断是否值得切 → @ml-trainer 评估迁移成本 → @evaluation 评估效果增益
                 → 如果 1 周能切换并出可用能力 → 立刻启动快速出模型能力流程
 ```
 
