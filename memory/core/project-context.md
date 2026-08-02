@@ -68,4 +68,4 @@
 | 平台 | MLOps | @mlops | 端到端流水线、实验追踪 |
 | 商业 | Growth | @growth | 增长、用户反馈、转化 |
 | 商业 | DevRel | @devrel | 文档、SDK、社区、生态 |
-| 商业 | 运营 | @ops | 内容、用户运营 |
+| 商业 | 运营 | @growth | 内容、用户运营 |

@@ -35,7 +35,7 @@ CEO
  │    ├── 阶段 3 · 工程交付：@ml-serving @backend @infra
  │    │     产出：可调用 API + 部署 + 监控
  │    │
- │    └── 阶段 4 · 商业闭环：@growth @devrel @ops
+ │    └── 阶段 4 · 商业闭环：@growth @devrel @growth
  │          产出：调用量 + 用户反馈 + 商业转化
  │
  └── 🔧 横向支撑：@mlops

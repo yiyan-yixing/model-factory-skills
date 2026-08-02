@@ -130,7 +130,7 @@ your-project/
       │ 产品 ×2  │   │ 数据 ×2 │ │ 模型 ×4 │ │ 平台 ×3 │  │ 商业 ×3 │
       │ @head-of-models     │   │@data-eng│ │@ml-train│ │@backend │  │@growth  │
       │ @ai-pm  │   │@data-str│ │@ml-align│ │@infra   │  │@devrel  │
-      │         │   │         │ │@ml-serve│ │@mlops   │  │@ops     │
+      │         │   │         │ │@ml-serve│ │@mlops   │  │@growth     │
       │         │   │         │ │@eval    │ │         │  │         │
       └─────────┘   └─────────┘ └─────────┘ └─────────┘  └─────────┘
 ```
@@ -151,7 +151,7 @@ your-project/
 | **MLOps** | `@mlops` | 端到端模型流水线、实验追踪 | MLOps 流水线 |
 | **Growth** | `@growth` | 增长、用户反馈、商业转化 | 增长实验 |
 | **DevRel** | `@devrel` | 文档、SDK、社区、开发者生态 | 开发者文档/SDK |
-| **运营** | `@ops` | 内容、用户运营 | 内容运营日历 |
+| **运营** | `@growth` | 内容、用户运营 | 内容运营日历 |
 
 > **COO**（组织架构里 CEO 可兼任）职责并入 @ceo，不单列 Agent。
 

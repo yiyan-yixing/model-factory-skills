@@ -380,7 +380,7 @@ my-model-company/
 | 部署/监控 | `@infra` | `infra-cicd-deploy` | 60min |
 | 增长/推广 | `@growth` | `growth-experiment` | 30min |
 | 开发者文档 | `@devrel` | `devrel-docs-sdk` | — |
-| 内容运营 | `@ops` | `ops-content-calendar` | 30min |
+| 内容运营 | `@growth` | `ops-content-calendar` | 30min |
 
 ---
 

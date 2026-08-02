@@ -28,7 +28,7 @@ CEO
  │    ├── 阶段 3 · 工程交付：@ml-serving @backend @infra
  │    │     产出：可调用 API + 部署 + 监控
  │    │
- │    └── 阶段 4 · 商业闭环：@growth @devrel @ops
+ │    └── 阶段 4 · 商业闭环：@growth @devrel @growth
  │          产出：调用量 + 用户反馈 + 商业转化
  │
  └── 🔧 横向支撑：@mlops
@@ -136,7 +136,7 @@ CEO
 | **Infra** | `@infra` | 工程交付 | CI/CD、部署、监控、容器 | 不手动重复部署 |
 | **Growth** | `@growth` | 商业闭环 | 增长、用户反馈、转化 | 不刷量不追虚荣指标 |
 | **DevRel** | `@devrel` | 商业闭环 | 文档、SDK、社区、生态 | 不写没人看的文档 |
-| **运营** | `@ops` | 商业闭环 | 内容、用户运营 | 不追热点偏离定位 |
+| **运营** | `@growth` | 商业闭环 | 内容、用户运营 | 不追热点偏离定位 |
 
 ### 🔧 横向支撑
 
@@ -281,7 +281,7 @@ Day 6-7: 🚀 推广环·商业闭环
 | @mlops | 🔧 横向支撑 | memory/core/architecture.md（流水线部分） | memory/core/ |
 | @growth | 🚀 推广环·商业闭环 | blackboard/current-sprint.md（增长部分） | memory/core/, archival/user-research/ |
 | @devrel | 🚀 推广环·商业闭环 | — | memory/core/ |
-| @ops | 🚀 推广环·商业闭环 | — | memory/core/ |
+| @growth | 🚀 推广环·商业闭环 | — | memory/core/ |
 
 ---
 
