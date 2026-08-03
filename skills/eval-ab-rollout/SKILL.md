@@ -1,5 +1,5 @@
 ---
-name: "Eval AB Rollout / AB 测试与灰度回滚"
+name: "eval-ab-rollout"
 description: "设计模型上线 AB 测试、灰度发布策略、回滚触发条件，线上效果验证与事故止血。用 @evaluation 调用。"
 when_to_use: "模型版本上线灰度、AB 测试设计、线上效果验证、事故回滚时；用户说'AB测试''灰度发布''模型回滚''线上效果''事故止血'时触发。频次：on-demand，时间盒：30min"
 allowed-tools:

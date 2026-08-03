@@ -1,5 +1,5 @@
 ---
-name: "ML Pretraining Experiment / 预训练实验管理"
+name: "ml-pretraining-experiment"
 description: "设计训练实验、超参与数据版本记录、Scaling 评估、实验追踪，保证可复现可对比。用 @ml-trainer 调用。"
 when_to_use: "启动预训练/持续训练实验、设计超参、评估 Scaling、实验追踪时；用户说'训练实验''预训练''超参设计''Scaling''实验追踪'时触发。频次：on-demand，时间盒：实验周期"
 allowed-tools:

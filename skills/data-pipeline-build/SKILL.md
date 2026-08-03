@@ -1,5 +1,5 @@
 ---
-name: "Data Pipeline Build / 数据流水线搭建"
+name: "data-pipeline-build"
 description: "搭建数据采集、清洗、版本化、质量校验的自动化流水线，让数据像代码一样可复现。用 @data-engineer 调用。"
 when_to_use: "搭建数据采集/清洗流水线、数据版本化、数据质量校验时；用户说'数据流水线''数据清洗''数据采集''ETL''数据版本'时触发。频次：on-demand，时间盒：60min"
 allowed-tools:

@@ -1,5 +1,5 @@
 ---
-name: "MLOps Pipeline / 端到端模型流水线"
+name: "mlops-pipeline"
 description: "搭建数据→训练→评测→上线的自动化流水线、实验追踪、模型注册，消除人工搬运。用 @mlops 调用。"
 when_to_use: "搭建端到端模型流水线、实验追踪、模型注册、持续训练自动化时；用户说'模型流水线''MLOps''实验追踪''模型注册''持续训练''CT'时触发。频次：on-demand，时间盒：90min"
 allowed-tools:

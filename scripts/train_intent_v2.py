@@ -45,17 +45,26 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import LoraConfig, get_peft_model, TaskType
 
 # ============================================================
-# Configuration
+# Configuration — 通过 registry_resolver 统一路径解析
 # ============================================================
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MODEL_PATH = os.path.join(PROJECT_DIR, "models", "Qwen2.5-0.5B-base")
-DATA_DIR = os.path.join(PROJECT_DIR, "data", "intent")
+# 导入路径解析器（registry_resolver.py 位于 biz/model/registry/）
+_REGISTRY_RESOLVER = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                                   "..", "..", "biz", "model", "registry", "registry_resolver.py")
+import importlib.util
+_spec = importlib.util.spec_from_file_location("registry_resolver", _REGISTRY_RESOLVER)
+_resolver = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_resolver)
+resolve_path = _resolver.resolve_path
+get_base_model_path = _resolver.get_base_model_path
 
-# Output to production registry
-REGISTRY_DIR = os.path.join(PROJECT_DIR, "..", "..", "biz", "model", "registry", "intent-0.5b-v2")
-REGISTRY_DIR = os.path.abspath(REGISTRY_DIR)
-BEST_CHECKPOINT_DIR = os.path.join(REGISTRY_DIR, "best_model")
-LAST_CHECKPOINT_DIR = os.path.join(REGISTRY_DIR, "last_checkpoint")
+MODEL_PATH = get_base_model_path("Qwen2.5-0.5B-base")
+DATA_DIR = resolve_path("data:intent/v2")
+
+# Output to models/（权重）和 registry/staging/（元数据）
+CHECKPOINT_DIR = resolve_path("checkpoints:intent/sft3")
+STAGING_DIR = resolve_path("staging:intent-0.5b-sft3")
+BEST_CHECKPOINT_DIR = os.path.join(CHECKPOINT_DIR, "best_model")
+LAST_CHECKPOINT_DIR = os.path.join(CHECKPOINT_DIR, "last_checkpoint")
 
 LEARNING_RATE = 2e-5
 NUM_EPOCHS = 5

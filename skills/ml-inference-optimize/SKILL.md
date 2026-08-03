@@ -1,5 +1,5 @@
 ---
-name: "ML Inference Optimize / 推理优化与部署"
+name: "ml-inference-optimize"
 description: "推理引擎选型、量化压缩、延迟/吞吐/成本优化，量化前后对照评测，可回滚部署。用 @ml-serving 调用。"
 when_to_use: "模型上线前推理优化、量化、延迟/成本优化、推理引擎选型时；用户说'推理优化''量化''延迟高''推理成本''vLLM''部署模型'时触发。频次：on-demand，时间盒：45min"
 allowed-tools:

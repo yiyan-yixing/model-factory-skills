@@ -26,11 +26,25 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from peft import LoraConfig, get_peft_model, TaskType, prepare_model_for_kbit_training
 
 # ============================================================
-# Configuration
+# Configuration — 通过 registry_resolver 统一路径解析
 # ============================================================
-MODEL_PATH = "/workspace/model-factory-skills/models/Qwen2.5-0.5B-base"
-DATA_DIR = "/workspace/model-factory-skills/data"
-OUTPUT_DIR = "/workspace/model-factory-skills/models/sentiment-0.5b-v1/sft-checkpoint"
+# 注意：此脚本原始版本依赖 bitsandbytes (CPU QLoRA)，Mac 上不可用。
+# 当前保留此文件作为参考。实际训练应使用基于 train_intent_v2.py 模板
+# 创建的 train_sentiment.py (fp32 + MPS + AdamW + LoRA)。
+#
+# 路径已更新为 registry_resolver 解析，消除 /workspace/ 硬编码。
+_REGISTRY_RESOLVER = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                                   "..", "..", "biz", "model", "registry", "registry_resolver.py")
+import importlib.util
+_spec = importlib.util.spec_from_file_location("registry_resolver", _REGISTRY_RESOLVER)
+_resolver = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_resolver)
+resolve_path = _resolver.resolve_path
+get_base_model_path = _resolver.get_base_model_path
+
+MODEL_PATH = get_base_model_path("Qwen2.5-0.5B-base")
+DATA_DIR = resolve_path("data:sentiment/v1")
+OUTPUT_DIR = resolve_path("checkpoints:sentiment/sft1")
 
 LEARNING_RATE = 5e-5
 NUM_EPOCHS = 3

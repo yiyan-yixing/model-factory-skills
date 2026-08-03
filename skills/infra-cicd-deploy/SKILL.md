@@ -1,5 +1,5 @@
 ---
-name: "Infra CI/CD Deploy / 部署与监控"
+name: "infra-cicd-deploy"
 description: "搭建模型服务一键部署、CI/CD 流水线、监控告警、回滚方案，GPU 利用率与成本巡检。用 @infra 调用。"
 when_to_use: "部署模型服务、搭建 CI/CD、配置监控告警、发布回滚方案时；用户说'部署''CI/CD''监控告警''一键发布''回滚方案''GPU利用率'时触发。频次：on-demand，时间盒：60min"
 allowed-tools:

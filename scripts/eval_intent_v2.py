@@ -28,13 +28,22 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import PeftModel
 
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MODEL_PATH = os.path.join(PROJECT_DIR, "models", "Qwen2.5-0.5B-base")
-CHECKPOINT_DIR = os.path.join(PROJECT_DIR, "..", "..", "biz", "model", "registry", "intent-0.5b-v2", "best_model")
-CHECKPOINT_DIR = os.path.abspath(CHECKPOINT_DIR)
-DATA_DIR = os.path.join(PROJECT_DIR, "data", "intent")
-RESULTS_DIR = os.path.join(PROJECT_DIR, "..", "..", "biz", "model", "registry", "intent-0.5b-v2")
-RESULTS_DIR = os.path.abspath(RESULTS_DIR)
+# ============================================================
+# Configuration — 通过 registry_resolver 统一路径解析
+# ============================================================
+_REGISTRY_RESOLVER = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                                   "..", "..", "biz", "model", "registry", "registry_resolver.py")
+import importlib.util
+_spec = importlib.util.spec_from_file_location("registry_resolver", _REGISTRY_RESOLVER)
+_resolver = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_resolver)
+resolve_path = _resolver.resolve_path
+get_base_model_path = _resolver.get_base_model_path
+
+MODEL_PATH = get_base_model_path("Qwen2.5-0.5B-base")
+CHECKPOINT_DIR = resolve_path("staging:intent-0.5b-sft2/best_model")
+DATA_DIR = resolve_path("data:intent/v2")
+RESULTS_DIR = resolve_path("staging:intent-0.5b-sft2")
 
 # Go/No-Go thresholds
 COARSE_ACC_THRESHOLD = 0.90

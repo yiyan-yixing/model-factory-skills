@@ -1,5 +1,5 @@
 ---
-name: "Model API Design / 模型服务 API 设计"
+name: "model-api-design"
 description: "设计模型推理 API：接口规范、鉴权配额、流式输出、计费计量、错误处理，面向调用方。用 @backend 调用。"
 when_to_use: "设计模型推理 API、接口规范、鉴权配额、流式输出、计费方案时；用户说'模型API''接口设计''鉴权''配额限流''计费''流式输出'时触发。频次：on-demand，时间盒：45min"
 allowed-tools:

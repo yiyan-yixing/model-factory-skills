@@ -1,5 +1,5 @@
 ---
-name: "Prompt Agent Design / Prompt 与 Agent 设计"
+name: "prompt-agent-design"
 description: "设计系统 Prompt、Few-shot、输出格式约束、Agent 编排，并做对照评测。用 @ai-pm 调用。"
 when_to_use: "设计 Prompt/Agent、优化模型能力体验、模型升级后 Prompt 回归时；用户说'Prompt设计''Agent编排''Few-shot''体验优化'时触发。频次：on-demand，时间盒：30min"
 allowed-tools:
