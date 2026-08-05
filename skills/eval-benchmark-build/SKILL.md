@@ -1,5 +1,5 @@
 ---
-name: "Eval Benchmark Build / 自动评测基准构建"
+name: "eval-benchmark-build"
 description: "构建覆盖核心能力+边界+安全的自动评测基准，含客观指标、LLM-as-judge、人工抽检三层。用 @evaluation 调用。"
 when_to_use: "构建/维护评测基准、定评测指标、设计评测方案时；用户说'评测基准''评测体系''怎么评测模型''LLM-as-judge''红队'时触发。频次：on-demand，时间盒：60min"
 allowed-tools:

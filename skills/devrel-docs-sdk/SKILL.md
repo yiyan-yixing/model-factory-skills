@@ -1,5 +1,5 @@
 ---
-name: "DevRel Docs SDK / 开发者文档与 SDK"
+name: "devrel-docs-sdk"
 description: "产出能跑的开发者文档、SDK、代码示例、Playground，让开发者 5 分钟用上模型能力。用 @devrel 调用。"
 when_to_use: "写开发者文档、做 SDK、写代码示例、搭 Playground、API 文档同步时；用户说'开发者文档''SDK''代码示例''Playground''Quickstart''接入文档'时触发。频次：on-demand，时间盒：按需"
 allowed-tools:

@@ -10,7 +10,7 @@
 mkdir my-model-company && cd my-model-company
 
 # 2. 一键安装 + 自动初始化（回答几个问题，模型工厂就是你的了）
-bash /workspace/model-factory-skills/install.sh
+curl -fsSL https://raw.githubusercontent.com/yiyan-yixing/model-factory-skills/main/install.sh | bash
 
 # 3. 启动 Claude Code，你的大模型公司已就绪
 claude
@@ -301,4 +301,4 @@ Day 6-7: @devrel 出文档/示例 + @growth 推 10 个种子用户 + @data 开�
 
 ## License
 
-CC BY-SA 4.0 — 欢迎借鉴，请注明出处
+MIT License — 欢迎借鉴，请注明出处（见 [LICENSE](./LICENSE)）

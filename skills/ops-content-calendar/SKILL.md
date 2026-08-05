@@ -1,5 +1,5 @@
 ---
-name: "Ops Content Calendar / 内容与用户运营日历"
+name: "ops-content-calendar"
 description: "规划内容运营日历、技术内容/案例/对比选题、社交媒体发布、种子用户运营。用 @growth 调用。"
 when_to_use: "规划内容日历、做内容选题、社交媒体发布、种子用户运营时；用户说'内容日历''内容选题''技术内容''社媒发布''种子用户''用户运营'时触发。频次：每周，时间盒：30min"
 allowed-tools:

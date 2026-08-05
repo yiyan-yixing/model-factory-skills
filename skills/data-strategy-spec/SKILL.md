@@ -1,5 +1,5 @@
 ---
-name: "Data Strategy Spec / 数据标准与评估指标"
+name: "data-strategy-spec"
 description: "制定数据来源策略、标注/生成方案、质量标准、评估指标，判断数据是否够训练。用 @data-strategy 调用。"
 when_to_use: "新能力立项定数据需求、定标注规范、判断数据够不够训练时；用户说'数据策略''数据标准''数据够不够''标注规范''合成数据'时触发。频次：on-demand，时间盒：30min"
 allowed-tools:

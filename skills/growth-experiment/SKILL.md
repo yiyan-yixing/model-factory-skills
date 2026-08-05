@@ -1,5 +1,5 @@
 ---
-name: "Growth Experiment / 增长实验"
+name: "growth-experiment"
 description: "设计增长实验（拉新/激活/留存/转化）、量化效果、跑通免费到付费转化，反馈闭环给产品。用 @growth 调用。"
 when_to_use: "做增长实验、跑转化漏斗、定义增长指标、免费到付费转化时；用户说'增长实验''转化漏斗''留存''拉新''付费转化''增长指标'时触发。频次：on-demand，时间盒：30min"
 allowed-tools:

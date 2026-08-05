@@ -1,5 +1,5 @@
 ---
-name: "ML Alignment RLHF / SFT 与 RLHF 对齐"
+name: "ml-alignment-rlhf"
 description: "选择对齐方法（SFT/DPO/RLHF）、构建对齐与安全数据、执行对齐并做能力+安全双维度评测。用 @ml-alignment 调用。"
 when_to_use: "基座微调后的对齐阶段、SFT/RLHF/DPO 方法选择、安全对齐、构建偏好数据时；用户说'对齐''SFT''RLHF''DPO''微调''安全对齐''偏好数据'时触发。频次：on-demand，时间盒：对齐周期"
 allowed-tools:
